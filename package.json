@@ -1,0 +1,22 @@
+{
+  "name": "Commenting-system",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^4.1.1",
+    "@types/node": "^20.3.1",
+    "prettier": "^2.8.8",
+    "typescript": "^5.0.2",
+    "vite": "^4.3.9",
+    "vite-tsconfig-paths": "^4.2.0"
+  },
+  "dependencies": {
+    "sass": "^1.63.5"
+  }
+}
