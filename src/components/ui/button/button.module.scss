@@ -1,0 +1,13 @@
+.button {
+    padding: 20px 60px;
+
+    border: none;
+    border-radius: 5px;
+    background-color: #A2A2A2;
+    opacity: .4;
+    transition: opacity .4s ease;
+
+    &:hover {
+        opacity: .7;
+    }
+}

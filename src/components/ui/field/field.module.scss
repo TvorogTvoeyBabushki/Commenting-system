@@ -1,0 +1,17 @@
+@import '@/assets/styles/variables';
+
+.field {
+    width: 100%;
+    max-width: 688px;
+    padding: 20px 30px;
+
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba($black, 0.2);
+
+    letter-spacing: 1px;
+
+    &::placeholder {
+        opacity:  .4;
+    }
+}
