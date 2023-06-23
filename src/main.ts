@@ -1,5 +1,3 @@
-import { Field } from './components/ui/field/field'
-
 import '@/assets/styles/global.scss'
 
 import styles from './main.module.scss'

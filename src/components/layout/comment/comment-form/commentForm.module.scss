@@ -1,6 +1,31 @@
+@import '@/assets/styles/variables';
+
 .form {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin: 70px 0 40px 91px;
+    margin-bottom: 40px;
+    padding-top: 37px;
+    padding-left: 91px;
+    position: relative;
+    
+    > input {
+        margin-right: 30px;
+    }
+}
+
+.comment_panel {
+    display: flex;
+    margin-bottom: 32px;
+
+    > div:first-child {
+        font-weight: 500;
+        border-bottom: 3px solid $black;
+        padding-bottom: 5px;
+
+        > span {
+            margin-left: 13px;
+            font-size: 20px;
+            opacity: .4;
+        }
+    }
 }
