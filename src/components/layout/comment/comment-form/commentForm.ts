@@ -3,8 +3,9 @@ import { Field } from '@/components/ui/field/field'
 
 import styles from './commentForm.module.scss'
 import UserItem from '@/components/ui/user-item/userItem'
+import moment from 'moment'
 
-interface ICommentInfo {
+export interface ICommentInfo {
 	[k: string]: string | Date
 }
 
@@ -18,8 +19,8 @@ class CommentForm {
 
 	userItem: UserItem
 
-	private _infoComment: ICommentInfo
-	private _comments: string[]
+	private _commentInfo: ICommentInfo
+	private _comments: ICommentInfo[]
 	field: Field
 	button: Button
 
@@ -30,17 +31,10 @@ class CommentForm {
 		this.divCommentPanelAmountComments = document.createElement('div')
 		this.divFieldValidation = document.createElement('div')
 
-		this.userItem = new UserItem().draw()
-		console.log(this.userItem.getUserInfo);
-		
+		this.userItem = new UserItem()			
 
-		this._infoComment = {
-			// ...this.userItem.getUserInfo(),
-			date: new Date()
-		}
-		// console.log(this._infoComment);
+		this._commentInfo = {}
 		
-
 		this._comments = []
 		if (localStorage.getItem('comment')) {
 			this._comments = [
@@ -97,7 +91,16 @@ class CommentForm {
 		const inputToForm = eventTarget.querySelector('input')
 
 		if (inputToForm?.value.trim()) {
-			this._comments.push(inputToForm.value.trim())
+			this.userItem.getUserInfo.forEach(item => {
+				this._commentInfo = {
+					author: `${item.name.first} ${item.name.last}`,
+					image: item.picture.large,
+					date: moment(new Date()).format('DD.MM HH:mm'),
+					comment: inputToForm.value.trim()
+				}
+			})
+
+			this._comments.push(this._commentInfo)
 			localStorage.setItem('comment', JSON.stringify(this._comments))
 
 			this.drawCommentPanel()

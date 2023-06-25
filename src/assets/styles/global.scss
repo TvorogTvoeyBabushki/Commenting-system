@@ -4,10 +4,21 @@
 *,
 *::before,
 *:after {
-    box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 body {
-    font: 400 normal 18px/1.2 $default-font;
-    color: $black;
+	font: 400 normal 18px/1.2 $default-font;
+	color: $black;
+}
+
+img {
+	width: 61px;
+	height: 61px;
+	border-radius: 50%;
+	margin-right: 30px;
+
+	position: absolute;
+	top: 0;
+	left: 0;
 }

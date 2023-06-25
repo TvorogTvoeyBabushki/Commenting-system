@@ -3,7 +3,9 @@ import axios from 'axios'
 import styles from './userItem.module.scss'
 
 interface IUser {
-	[k: string]: string | number
+	[k: string]: {
+		[k: string]: string
+	}
 }
 
 class UserItem {
@@ -11,16 +13,16 @@ class UserItem {
 	imageUser: HTMLElement
 	authorUser: HTMLElement
 
-	userInfo: IUser
+	private _userInfo: IUser[]
 
 	constructor() {
 		this.wrapperUser = document.createElement('div')
 		this.imageUser = document.createElement('img')
 		this.authorUser = document.createElement('p')
 
-		this.userInfo = {}
+		this._userInfo = []
 
-		// this.draw()
+		this.draw()
 		this.addStyle()
 	}
 
@@ -29,27 +31,32 @@ class UserItem {
 	}
 
 	public get getUserInfo() {
-		return this.userInfo
+		return this._userInfo
 	}
 
-	public set getUserInfo(user) {
-		this.userInfo = user
+	private set getUserInfo(user) {
+		this._userInfo = user
 	}
 
-	public draw() {
+	private draw() {
 		this.getRandomUser((user: IUser[]) => {
 			user?.forEach(item => {
-				this.imageUser.setAttribute('src', item.picture.large)
+				const imageProps = [
+					['src', item.picture.large],
+					['alt', 'user']
+				]
+
+				for (const [attr, val] of imageProps) {
+					this.imageUser.setAttribute(attr, val)
+				}
+
 				this.authorUser.append(item.name.first, ' ', item.name.last)
 				this.wrapperUser.append(this.imageUser, this.authorUser)
 
-				this.userInfo = item
+				this._userInfo.push(item)
 			})
-			console.log(this.userInfo)
-			return (this.getUserInfo = this.userInfo)
+			this.getUserInfo = this._userInfo
 		})
-
-		return this
 	}
 
 	private async getRandomUser(onSuccess: (arg: IUser[]) => void) {
