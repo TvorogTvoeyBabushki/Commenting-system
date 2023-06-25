@@ -1,31 +1,53 @@
 @import '@/assets/styles/variables';
 
 .form {
-    display: flex;
-    align-items: center;
-    margin-bottom: 40px;
-    padding-top: 37px;
-    padding-left: 91px;
-    position: relative;
-    
-    > input {
-        margin-right: 30px;
-    }
+	display: flex;
+	align-items: center;
+	margin-bottom: 40px;
+	padding-top: 37px;
+	padding-left: 91px;
+	position: relative;
+
+	> input {
+		margin-right: 30px;
+	}
+
+	> div:last-child {
+		display: flex;
+
+		position: absolute;
+		top: 0;
+		right: 0;
+
+		font-size: 14px;
+		color: $black;
+		opacity: 0.4;
+		letter-spacing: 0.3px;
+
+		> p:first-child {
+			margin-right: 30px;
+			font-style: italic;
+		}
+
+		> p:last-child {
+			visibility: hidden;
+		}
+	}
 }
 
 .comment_panel {
-    display: flex;
-    margin-bottom: 32px;
+	display: flex;
+	margin-bottom: 32px;
 
-    > div:first-child {
-        font-weight: 500;
-        border-bottom: 3px solid $black;
-        padding-bottom: 5px;
+	> div:first-child {
+		font-weight: 500;
+		border-bottom: 3px solid $black;
+		padding-bottom: 5px;
 
-        > span {
-            margin-left: 13px;
-            font-size: 20px;
-            opacity: .4;
-        }
-    }
+		> span {
+			margin-left: 13px;
+			font-size: 20px;
+			opacity: 0.4;
+		}
+	}
 }

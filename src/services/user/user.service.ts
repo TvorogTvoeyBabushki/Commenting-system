@@ -1,9 +1,9 @@
 import axios from 'axios'
 
-class UserService {
+export class UserService {
 	async getAllUser() {
 		return axios.get('https://randomuser.me/api/')
 	}
 }
 
-export default new UserService()
+// export default new UserService()

@@ -7,13 +7,15 @@ interface IFieldProps {
 export class Field {
 	inputElement: HTMLInputElement = document.createElement('input')
 	props: [string, string][]
+	wordCount: number | undefined
 
 	constructor(props: IFieldProps) {
 		this.props = Object.entries(props)
+		this.wordCount = 0
 
 		this.addStyle()
 		this.addAttribute()
-		// this.handleInput()
+		this.handleInput()
 	}
 
 	private addStyle() {
@@ -26,13 +28,19 @@ export class Field {
 		}
 	}
 
-	// private changeValue(event: Event) {
-	// 	const eventTarget = event.target as HTMLInputElement | null
+	private changeValue = (event: Event) => {
+		const eventTarget = event.target as HTMLInputElement | null
+		this.wordCount = eventTarget?.value.length
+		return this
+	}
 
-	// 	if (eventTarget) this._valueInput = eventTarget.value
-	// }
-
-	// private handleInput() {
-	// 	this.inputElement.addEventListener('change', this.changeValue)
-	// }
+	private handleInput() {
+		this.inputElement.addEventListener('input', this.changeValue)
+	}
 }
+const fieldProps = {
+	type: 'text',
+	placeholder: 'Введите текст сообщения...',
+	name: 'comment'
+}
+console.log(new Field(fieldProps).wordCount)

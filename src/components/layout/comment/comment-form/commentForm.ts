@@ -14,6 +14,8 @@ class CommentForm {
 	divCommentPanel: HTMLElement
 	divCommentPanelAmountComments: HTMLElement
 
+	divFieldValidation: HTMLElement
+
 	userItem: UserItem
 
 	private _infoComment: ICommentInfo
@@ -26,14 +28,17 @@ class CommentForm {
 
 		this.divCommentPanel = document.createElement('div')
 		this.divCommentPanelAmountComments = document.createElement('div')
+		this.divFieldValidation = document.createElement('div')
 
-		this.userItem = new UserItem()
+		this.userItem = new UserItem().draw()
+		console.log(this.userItem.getUserInfo);
+		
 
 		this._infoComment = {
-			...this.userItem.userInfo,
+			// ...this.userItem.getUserInfo(),
 			date: new Date()
 		}
-		console.log(this._infoComment);
+		// console.log(this._infoComment);
 		
 
 		this._comments = []
@@ -50,7 +55,7 @@ class CommentForm {
 		}
 		this.field = new Field(fieldProps)
 		this.button = new Button('Отправить')
-
+		
 		this.addStyles()
 		this.addElementToForm()
 		this.handleForm()
@@ -61,6 +66,17 @@ class CommentForm {
 		this.formElement.classList.add(styles.form)
 	}
 
+	private drawFieldValidation() {
+		const paragraphContent = ['Макс. 1000 символов', 'Слишком длинное сообщение']
+		
+		for (const item of paragraphContent) {
+			const paragraph = document.createElement('p')
+			paragraph.innerText = item
+			this.divFieldValidation.append(paragraph)
+		}
+
+	}
+
 	public drawCommentPanel() {
 		this.divCommentPanelAmountComments.innerHTML = `Комментарии <span>(${this._comments.length})</span>`
 		this.divCommentPanel.append(this.divCommentPanelAmountComments)
@@ -69,7 +85,9 @@ class CommentForm {
 	}
 
 	private addElementToForm() {
-		this.formElement.append(this.userItem.wrapperUser ,this.field.inputElement, this.button.buttonElement)
+		this.drawFieldValidation()
+
+		this.formElement.append(this.userItem.wrapperUser ,this.field.inputElement, this.button.buttonElement,this.divFieldValidation)
 	}
 
 	private onSubmit = (event: Event) => {
