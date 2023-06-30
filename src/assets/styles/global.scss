@@ -8,7 +8,7 @@
 }
 
 body {
-	font: 400 normal 18px/1.2 $default-font;
+	font: 400 normal 18px/1.4 $default-font;
 	color: $black;
 }
 
@@ -16,9 +16,4 @@ img {
 	width: 61px;
 	height: 61px;
 	border-radius: 50%;
-	margin-right: 30px;
-
-	position: absolute;
-	top: 0;
-	left: 0;
 }

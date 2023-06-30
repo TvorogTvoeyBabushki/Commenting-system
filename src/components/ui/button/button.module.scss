@@ -1,13 +1,17 @@
 .button {
-    padding: 20px 60px;
+	padding: 20px 60px;
 
-    border: none;
-    border-radius: 5px;
-    background-color: #A2A2A2;
-    opacity: .4;
-    transition: opacity .4s ease;
+	border: none;
+	border-radius: 5px;
+	background-color: #abd873;
 
-    &:hover {
-        opacity: .7;
-    }
+	transition: all 0.4s ease-in-out;
+
+	&:hover:not(&:disabled) {
+		opacity: 0.8;
+	}
+
+	&:disabled {
+		background-color: rgba(#a1a1a1, 0.4);
+	}
 }

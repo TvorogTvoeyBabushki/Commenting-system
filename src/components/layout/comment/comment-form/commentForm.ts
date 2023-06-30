@@ -6,7 +6,7 @@ import UserItem from '@/components/ui/user-item/userItem'
 import moment from 'moment'
 
 export interface ICommentInfo {
-	[k: string]: string | Date
+	[k: string]: string | Date | number
 }
 
 class CommentForm {
@@ -14,8 +14,6 @@ class CommentForm {
 
 	divCommentPanel: HTMLElement
 	divCommentPanelAmountComments: HTMLElement
-
-	divFieldValidation: HTMLElement
 
 	userItem: UserItem
 
@@ -29,9 +27,8 @@ class CommentForm {
 
 		this.divCommentPanel = document.createElement('div')
 		this.divCommentPanelAmountComments = document.createElement('div')
-		this.divFieldValidation = document.createElement('div')
 
-		this.userItem = new UserItem()			
+		this.userItem = new UserItem()
 
 		this._commentInfo = {}
 		
@@ -43,12 +40,12 @@ class CommentForm {
 		}
 
 		const fieldProps = {
-			type: 'text',
+			rows: '1',
 			placeholder: 'Введите текст сообщения...',
 			name: 'comment'
 		}
-		this.field = new Field(fieldProps)
 		this.button = new Button('Отправить')
+		this.field = new Field(fieldProps, this.button.buttonElement)
 		
 		this.addStyles()
 		this.addElementToForm()
@@ -60,17 +57,6 @@ class CommentForm {
 		this.formElement.classList.add(styles.form)
 	}
 
-	private drawFieldValidation() {
-		const paragraphContent = ['Макс. 1000 символов', 'Слишком длинное сообщение']
-		
-		for (const item of paragraphContent) {
-			const paragraph = document.createElement('p')
-			paragraph.innerText = item
-			this.divFieldValidation.append(paragraph)
-		}
-
-	}
-
 	public drawCommentPanel() {
 		this.divCommentPanelAmountComments.innerHTML = `Комментарии <span>(${this._comments.length})</span>`
 		this.divCommentPanel.append(this.divCommentPanelAmountComments)
@@ -79,24 +65,30 @@ class CommentForm {
 	}
 
 	private addElementToForm() {
-		this.drawFieldValidation()
+		this.field.drawFieldValidation()
 
-		this.formElement.append(this.userItem.wrapperUser ,this.field.inputElement, this.button.buttonElement,this.divFieldValidation)
+		this.formElement.append(
+			this.userItem.wrapperUser, 
+			this.field.textareaElement, 
+			this.button.buttonElement,
+			this.field.divFieldValidation
+			)
 	}
 
 	private onSubmit = (event: Event) => {
 		event.preventDefault()
 
 		const eventTarget = event.target as HTMLFormElement
-		const inputToForm = eventTarget.querySelector('input')
+		const textareaToForm = eventTarget.querySelector('textarea')
 
-		if (inputToForm?.value.trim()) {
+		if (textareaToForm?.value.trim()) {
 			this.userItem.getUserInfo.forEach(item => {
 				this._commentInfo = {
 					author: `${item.name.first} ${item.name.last}`,
 					image: item.picture.large,
 					date: moment(new Date()).format('DD.MM HH:mm'),
-					comment: inputToForm.value.trim()
+					comment: textareaToForm.value.trim(),
+					voteCount: Math.round(Math.random() * 200 - 100)
 				}
 			})
 
@@ -104,8 +96,9 @@ class CommentForm {
 			localStorage.setItem('comment', JSON.stringify(this._comments))
 
 			this.drawCommentPanel()
+			location.reload()
 
-			inputToForm.value = ''
+			textareaToForm.value = ''
 		}
 	}
 

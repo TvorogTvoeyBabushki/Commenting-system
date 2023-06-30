@@ -5,15 +5,21 @@ class ToolBar {
 	private _isDecrement: boolean
 	private _isIncrement: boolean
 
-	constructor() {
+	constructor(voteCount: number) {
 		this.spanVoteCount = document.createElement('span')
-		this._voteCount = 0
+		this._voteCount = voteCount
 
 		this._isDecrement = true
 		this._isIncrement = true
 	}
 
 	private drawVoteCount() {
+		this._voteCount > 0
+			? (this.spanVoteCount.style.color = '#8AC540')
+			: this._voteCount < 0
+			? (this.spanVoteCount.style.color = '#F00')
+			: (this.spanVoteCount.style.color = '#000')
+
 		this.spanVoteCount.innerText = `${this._voteCount}`
 
 		return this.spanVoteCount

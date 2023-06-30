@@ -5,42 +5,83 @@ interface IFieldProps {
 }
 
 export class Field {
-	inputElement: HTMLInputElement = document.createElement('input')
-	props: [string, string][]
-	wordCount: number | undefined
+	textareaElement: HTMLTextAreaElement = document.createElement('textarea')
+	divFieldValidation: HTMLElement
+	buttonElement: HTMLButtonElement
 
-	constructor(props: IFieldProps) {
-		this.props = Object.entries(props)
-		this.wordCount = 0
+	private _props: [string, string][]
+	private _wordCount: number | undefined
+
+	constructor(props: IFieldProps, buttonElement: HTMLButtonElement) {
+		this._props = Object.entries(props)
+		this.divFieldValidation = document.createElement('div')
+		this.buttonElement = buttonElement
 
 		this.addStyle()
 		this.addAttribute()
-		this.handleInput()
+		this.handleTextarea()
 	}
 
 	private addStyle() {
-		this.inputElement.classList.add(styles.field)
+		this.textareaElement.classList.add(styles.field)
 	}
 
 	private addAttribute() {
-		for (let [key, value] of this.props) {
-			this.inputElement.setAttribute(key, value)
+		for (let [key, value] of this._props) {
+			this.textareaElement.setAttribute(key, value)
 		}
 	}
 
-	private changeValue = (event: Event) => {
-		const eventTarget = event.target as HTMLInputElement | null
-		this.wordCount = eventTarget?.value.length
-		return this
+	public drawFieldValidation() {
+		const paragraphContent = [
+			'Макс. 1000 символов',
+			'Слишком длинное сообщение'
+		]
+
+		this._wordCount && this._wordCount < 1000
+			? (this.buttonElement.disabled = false)
+			: (this.buttonElement.disabled = true)
+
+		if (this._wordCount || this._wordCount === 0) {
+			const firstParagraphElement = this.divFieldValidation.querySelector(
+				'p'
+			) as HTMLElement
+			const lastParagraphElement =
+				firstParagraphElement?.nextElementSibling as HTMLElement
+
+			firstParagraphElement!.innerText = `${this._wordCount}/1000`
+
+			this._wordCount > 1000
+				? ((lastParagraphElement.style.visibility = 'visible'),
+				  (firstParagraphElement.style.color = 'rgba(255, 0, 0, 1)'))
+				: ((lastParagraphElement.style.visibility = 'hidden'),
+				  (firstParagraphElement.style.color = 'rgba(0, 0, 0, 0.4)'))
+
+			return
+		}
+
+		paragraphContent.forEach(item => {
+			const paragraphElement = document.createElement('p')
+
+			paragraphElement.innerText = item
+			this.divFieldValidation.append(paragraphElement)
+		})
 	}
 
-	private handleInput() {
-		this.inputElement.addEventListener('input', this.changeValue)
+	private autoResizeAndChangeWordCount(event: Event) {
+		this.textareaElement.style.height = 'auto'
+		this.textareaElement.style.height = `${this.textareaElement.scrollHeight}px`
+
+		const textareaElement = event.target as HTMLTextAreaElement
+
+		this._wordCount = textareaElement.value.trim().length
+		this.drawFieldValidation()
+	}
+
+	private handleTextarea() {
+		this.textareaElement.addEventListener(
+			'input',
+			this.autoResizeAndChangeWordCount.bind(this)
+		)
 	}
 }
-const fieldProps = {
-	type: 'text',
-	placeholder: 'Введите текст сообщения...',
-	name: 'comment'
-}
-console.log(new Field(fieldProps).wordCount)

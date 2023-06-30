@@ -8,7 +8,6 @@ export class Button {
 
 		this.addStyle()
 		this.addText(children)
-		// this.handleClick()
 	}
 
 	private addStyle() {
@@ -18,10 +17,4 @@ export class Button {
 	private addText(children: string) {
 		this.buttonElement.innerText = `${children}`
 	}
-
-	// private handleClick() {
-	// 	this.buttonElement.onclick = (event: MouseEvent) => {
-	// 		event.preventDefault()
-	// 	}
-	// }
 }

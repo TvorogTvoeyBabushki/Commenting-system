@@ -1,17 +1,20 @@
 @import '@/assets/styles/variables';
 
 .field {
-    width: 100%;
-    max-width: 688px;
-    padding: 20px 30px;
+	width: 100%;
+	max-width: 688px;
+	padding: 20px 30px;
+	resize: vertical;
+	min-height: 60px;
+	max-height: 400px;
 
-    border: none;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba($black, 0.2);
+	border: none;
+	border-radius: 5px;
+	box-shadow: 0 0 10px rgba($black, 0.2);
 
-    letter-spacing: 1px;
+	letter-spacing: 1px;
 
-    &::placeholder {
-        opacity:  .4;
-    }
+	&::placeholder {
+		opacity: 0.4;
+	}
 }

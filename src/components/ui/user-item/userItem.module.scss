@@ -8,5 +8,15 @@
 		top: 0;
 		color: $blue;
 		font-weight: 500;
+		cursor: pointer;
+	}
+
+	> img {
+		margin-right: 30px;
+		cursor: pointer;
+
+		position: absolute;
+		top: 0;
+		left: 0;
 	}
 }

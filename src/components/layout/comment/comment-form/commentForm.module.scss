@@ -8,8 +8,12 @@
 	padding-left: 91px;
 	position: relative;
 
-	> input {
+	> textarea {
 		margin-right: 30px;
+	}
+
+	> button {
+		align-self: flex-start;
 	}
 
 	> div:last-child {
@@ -20,8 +24,7 @@
 		right: 0;
 
 		font-size: 14px;
-		color: $black;
-		opacity: 0.4;
+		color: rgba($black, 0.4);
 		letter-spacing: 0.3px;
 
 		> p:first-child {
@@ -31,6 +34,7 @@
 
 		> p:last-child {
 			visibility: hidden;
+			color: $red;
 		}
 	}
 }
