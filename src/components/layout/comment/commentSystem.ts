@@ -9,8 +9,8 @@ class CommentSystem {
 
 	constructor() {
 		this.commentSection = document.createElement('section')
-		this.commentForm = new CommentForm()
 		this.commentItems = new CommentItems()
+		this.commentForm = new CommentForm(this.commentItems.commentsWrapper)
 
 		this.addStyle()
 		this.draw()

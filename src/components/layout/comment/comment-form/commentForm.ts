@@ -1,9 +1,13 @@
+import moment from 'moment'
+
 import { Button } from '@/components/ui/button/button'
 import { Field } from '@/components/ui/field/field'
+import { Select } from '@/components/ui/select/select'
+import UserItem from '@/components/ui/user-item/userItem'
+
+import { CommentItems } from '../comment-item/commentItems'
 
 import styles from './commentForm.module.scss'
-import UserItem from '@/components/ui/user-item/userItem'
-import moment from 'moment'
 
 export interface ICommentInfo {
 	[k: string]: string | Date | number
@@ -11,31 +15,32 @@ export interface ICommentInfo {
 
 class CommentForm {
 	formElement: HTMLFormElement
-
-	divCommentPanel: HTMLElement
-	divCommentPanelAmountComments: HTMLElement
+	commentPanel: HTMLElement
+	commentPanelAmountComments: HTMLElement
 
 	userItem: UserItem
+	commentItemsWrapper
 
 	private _commentInfo: ICommentInfo
 	private _comments: ICommentInfo[]
 	field: Field
 	button: Button
+	select: Select
 
-	constructor() {
+	constructor(commentItems: HTMLElement) {
 		this.formElement = document.createElement('form')
-
-		this.divCommentPanel = document.createElement('div')
-		this.divCommentPanelAmountComments = document.createElement('div')
+		this.commentPanel = document.createElement('div')
+		this.commentPanelAmountComments = document.createElement('div')
 
 		this.userItem = new UserItem()
+		this.commentItemsWrapper = commentItems
 
 		this._commentInfo = {}
-		
 		this._comments = []
+
 		if (localStorage.getItem('comment')) {
 			this._comments = [
-				...JSON.parse(<string>localStorage.getItem('comment'))
+				...JSON.parse(localStorage.getItem('comment') as string)
 			]
 		}
 
@@ -44,35 +49,65 @@ class CommentForm {
 			placeholder: 'Введите текст сообщения...',
 			name: 'comment'
 		}
+		const selectOptionValues = [
+			'По дате',
+			'По количеству оценок',
+			'По актуальности',
+			'По количеству ответов'
+		]
+
 		this.button = new Button('Отправить')
 		this.field = new Field(fieldProps, this.button.buttonElement)
-		
+		this.select = new Select('sortComment', selectOptionValues)
+
 		this.addStyles()
 		this.addElementToForm()
 		this.handleForm()
 	}
 
 	private addStyles() {
-		this.divCommentPanel.classList.add(styles.comment_panel)
+		this.commentPanel.classList.add(styles.comment_panel)
 		this.formElement.classList.add(styles.form)
 	}
 
 	public drawCommentPanel() {
-		this.divCommentPanelAmountComments.innerHTML = `Комментарии <span>(${this._comments.length})</span>`
-		this.divCommentPanel.append(this.divCommentPanelAmountComments)
+		this.commentPanelAmountComments.innerHTML = `Комментарии <span>(${this._comments.length})</span>`
 
-		return this.divCommentPanel
+		const commentPanelSortComments = document.createElement('div')
+		const propsIconElement = [
+			[
+				['src', '/public/arrow.png'],
+				['alt', 'icon']
+			],
+			[
+				['src', '/public/favorites.png'],
+				['alt', 'icon']
+			]
+		]
+
+		propsIconElement.forEach(item => {
+			const iconElement = document.createElement('img')
+
+			for (const [attr, val] of item) {
+				iconElement.setAttribute(attr, val)
+			}
+		})
+
+		commentPanelSortComments.append(this.select.selectElement)
+		this.commentPanel.append(this.commentPanelAmountComments)
+
+		return this.commentPanel
 	}
 
 	private addElementToForm() {
 		this.field.drawFieldValidation()
 
 		this.formElement.append(
-			this.userItem.wrapperUser, 
-			this.field.textareaElement, 
+			this.userItem.wrapperUser,
+			this.field.textareaElement,
 			this.button.buttonElement,
 			this.field.divFieldValidation
-			)
+		)
 	}
 
 	private onSubmit = (event: Event) => {
@@ -96,7 +131,11 @@ class CommentForm {
 			localStorage.setItem('comment', JSON.stringify(this._comments))
 
 			this.drawCommentPanel()
-			location.reload()
+			// location.reload()
+			this.commentItemsWrapper.insertAdjacentElement(
+				'afterbegin',
+				new CommentItems().update() as HTMLElement
+			)
 
 			textareaToForm.value = ''
 		}

@@ -1,0 +1,16 @@
+.select {
+	max-width: max-content;
+	margin-left: 55px;
+	font-size: 16px;
+	opacity: 0.4;
+	// text-decoration: underline;
+	border-bottom: 1px solid #000;
+
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	-o-appearance: none;
+	&::-ms-expand {
+		display: none;
+	}
+}
