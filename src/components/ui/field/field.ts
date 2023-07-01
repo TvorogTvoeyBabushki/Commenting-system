@@ -22,6 +22,12 @@ export class Field {
 		this.handleTextarea()
 	}
 
+	public resetWordCount() {
+		this._wordCount = 0
+
+		this.drawFieldValidation()
+	}
+
 	private addStyle() {
 		this.textareaElement.classList.add(styles.field)
 	}

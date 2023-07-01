@@ -73,28 +73,10 @@ class CommentForm {
 	public drawCommentPanel() {
 		this.commentPanelAmountComments.innerHTML = `Комментарии <span>(${this._comments.length})</span>`
 
-		const commentPanelSortComments = document.createElement('div')
-		const propsIconElement = [
-			[
-				['src', '/public/arrow.png'],
-				['alt', 'icon']
-			],
-			[
-				['src', '/public/favorites.png'],
-				['alt', 'icon']
-			]
-		]
-
-		propsIconElement.forEach(item => {
-			const iconElement = document.createElement('img')
-
-			for (const [attr, val] of item) {
-				iconElement.setAttribute(attr, val)
-			}
-		})
-
-		commentPanelSortComments.append(this.select.selectElement)
-		this.commentPanel.append(this.commentPanelAmountComments)
+		this.commentPanel.append(
+			this.commentPanelAmountComments,
+			this.select.selectWrapper
+		)
 
 		return this.commentPanel
 	}
@@ -131,13 +113,15 @@ class CommentForm {
 			localStorage.setItem('comment', JSON.stringify(this._comments))
 
 			this.drawCommentPanel()
-			// location.reload()
+
+			const newCommentItem = new CommentItems().update() as HTMLElement
 			this.commentItemsWrapper.insertAdjacentElement(
 				'afterbegin',
-				new CommentItems().update() as HTMLElement
+				newCommentItem
 			)
 
 			textareaToForm.value = ''
+			this.field.resetWordCount()
 		}
 	}
 
