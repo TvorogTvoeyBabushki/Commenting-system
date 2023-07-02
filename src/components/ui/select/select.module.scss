@@ -3,10 +3,22 @@
 .select {
 	margin-left: 55px;
 	position: relative;
-	> div {
+	> .name {
 		display: flex;
 		align-items: center;
-		padding-bottom: 15px;
+		cursor: pointer;
+		margin-bottom: 15px;
+
+		> span {
+			font-size: 16px;
+			opacity: 0.4;
+			border-bottom: 1px solid $black;
+			transition: opacity 0.2s ease;
+
+			&:hover {
+				opacity: 0.7;
+			}
+		}
 
 		> img {
 			animation: rotate-second-half 0.4s ease-in-out;
@@ -15,7 +27,6 @@
 			border-radius: 0;
 			margin-left: 10px;
 			margin-top: 5px;
-			cursor: pointer;
 
 			&.active {
 				animation: rotate-first-half 0.4s ease-in-out;
@@ -25,8 +36,9 @@
 	}
 
 	> ul {
+		display: none;
 		width: max-content;
-		padding: 10px 30px;
+
 		background-color: $white;
 		box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 		border-radius: 5px;
@@ -36,12 +48,49 @@
 		left: 0;
 		z-index: 1;
 
+		&.active {
+			display: block;
+		}
+
 		> li {
+			padding: 5px 0;
+			transition: background-color 0.2s ease;
+			position: relative;
+
+			&:first-child {
+				border-radius: 5px 5px 0 0;
+			}
+
+			&:last-child {
+				border-radius: 0 0 5px 5px;
+			}
+
+			&:hover {
+				background-color: darken($white, 20%);
+			}
+
 			> a {
+				display: inline-flex;
+				align-items: center;
+				width: 100%;
+				padding-right: 31px;
+
 				font-size: 16px;
-				color: inherit;
-				opacity: 0.4;
+				color: rgba($black, 0.4);
 				text-decoration: none;
+				transition: color 0.2s ease;
+				cursor: pointer;
+
+				&:hover {
+					color: rgba($black, 0.7);
+				}
+
+				> img {
+					visibility: hidden;
+					width: 15px;
+					height: 15px;
+					margin: 0 8px;
+				}
 			}
 		}
 	}

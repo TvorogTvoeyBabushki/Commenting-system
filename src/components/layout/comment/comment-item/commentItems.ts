@@ -7,7 +7,7 @@ export class CommentItems {
 	commentsWrapper: HTMLElement
 	commentsItem: HTMLElement | undefined
 
-	private _commentsInfo: ICommentInfo[] | undefined
+	_commentsInfo: ICommentInfo[] | undefined
 
 	constructor() {
 		this.commentsWrapper = document.createElement('div')
@@ -33,7 +33,7 @@ export class CommentItems {
 		return lastComment
 	}
 
-	private draw() {
+	draw() {
 		this._commentsInfo?.forEach(item => {
 			this.commentsItem = document.createElement('div')
 			const commentsItemImage = document.createElement('img')
