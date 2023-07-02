@@ -19,7 +19,6 @@ export class CommentItems {
 			].reverse()
 		}
 
-		// this.draw()
 		this.addStyle()
 	}
 
@@ -28,24 +27,27 @@ export class CommentItems {
 	}
 
 	public update() {
+		this.draw()
 		const lastComment = this.commentsWrapper.querySelector('div')
 
 		return lastComment
 	}
 
 	public sortComments() {
-		this._commentsInfo?.sort((a, b) => a.voteCount - b.voteCount).reverse()
+		this._commentsInfo
+			?.sort((a, b) => (a.voteCount as number) - (b.voteCount as number))
+			.reverse()
 
 		this.draw()
-		const commentsItem = this.commentsWrapper.querySelectorAll('.comments_item')
+		const commentsItems = this.commentsWrapper.querySelectorAll('.comment_item')
 
-		return commentsItem
+		return commentsItems
 	}
 
 	public draw() {
 		this._commentsInfo?.forEach(item => {
 			this.commentsItem = document.createElement('div')
-			this.commentsItem.classList.add('comments_item')
+			this.commentsItem.classList.add('comment_item')
 			const commentsItemImage = document.createElement('img')
 			const commentsItemInfo = document.createElement('div')
 			const commentsItemToolbar = new Toolbar(item.voteCount as number).draw()
