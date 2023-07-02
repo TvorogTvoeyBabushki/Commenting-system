@@ -58,7 +58,11 @@ class CommentForm {
 
 		this.button = new Button('Отправить')
 		this.field = new Field(fieldProps, this.button.buttonElement)
-		this.select = new Select('sortComment', selectOptionValues)
+		this.select = new Select(
+			'sortComment',
+			selectOptionValues,
+			this.commentItemsWrapper
+		)
 
 		this.addStyles()
 		this.addElementToForm()

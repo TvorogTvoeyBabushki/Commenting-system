@@ -7,7 +7,7 @@ export class CommentItems {
 	commentsWrapper: HTMLElement
 	commentsItem: HTMLElement | undefined
 
-	_commentsInfo: ICommentInfo[] | undefined
+	private _commentsInfo: ICommentInfo[] | undefined
 
 	constructor() {
 		this.commentsWrapper = document.createElement('div')
@@ -19,7 +19,7 @@ export class CommentItems {
 			].reverse()
 		}
 
-		this.draw()
+		// this.draw()
 		this.addStyle()
 	}
 
@@ -33,9 +33,19 @@ export class CommentItems {
 		return lastComment
 	}
 
-	draw() {
+	public sortComments() {
+		this._commentsInfo?.sort((a, b) => a.voteCount - b.voteCount).reverse()
+
+		this.draw()
+		const commentsItem = this.commentsWrapper.querySelectorAll('.comments_item')
+
+		return commentsItem
+	}
+
+	public draw() {
 		this._commentsInfo?.forEach(item => {
 			this.commentsItem = document.createElement('div')
+			this.commentsItem.classList.add('comments_item')
 			const commentsItemImage = document.createElement('img')
 			const commentsItemInfo = document.createElement('div')
 			const commentsItemToolbar = new Toolbar(item.voteCount as number).draw()
@@ -72,5 +82,7 @@ export class CommentItems {
 			this.commentsItem.append(commentsItemImage, commentsItemInfo)
 			this.commentsWrapper.append(this.commentsItem)
 		})
+
+		return this.commentsWrapper
 	}
 }

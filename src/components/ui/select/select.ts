@@ -1,5 +1,4 @@
 import styles from './select.module.scss'
-import { ICommentInfo } from '@/components/layout/comment/comment-form/commentForm'
 import { CommentItems } from '@/components/layout/comment/comment-item/commentItems'
 
 export class Select {
@@ -10,18 +9,21 @@ export class Select {
 
 	previousSelect: string[]
 
-	constructor(selectNameAttr: string, selectOptionValues: string[]) {
+	constructor(
+		selectNameAttr: string,
+		selectOptionValues: string[],
+		commentItems: HTMLElement
+	) {
 		this.selectWrapper = document.createElement('div')
 		this.nameSelectedElement = document.createElement('div')
 		this.arrowSelectedElement = document.createElement('img')
 		this.selectListElements = document.createElement('ul')
 
 		this.previousSelect = ['По количеству оценок']
-		this._commentsInfo = new CommentItems()._commentsInfo
 
 		this.addStyles()
 		this.addAttrIcon()
-		this.draw(selectOptionValues, selectNameAttr)
+		this.draw(selectOptionValues, selectNameAttr, commentItems)
 
 		this.showSortList()
 		this.closeSortList()
@@ -61,7 +63,11 @@ export class Select {
 		}
 	}
 
-	private draw(selectOptionValues: string[], selectNameAttr: string) {
+	private draw(
+		selectOptionValues: string[],
+		selectNameAttr: string,
+		commentItems: HTMLElement
+	) {
 		const spanNameSelected = document.createElement('span')
 
 		spanNameSelected.innerText = 'По количеству оценок'
@@ -94,15 +100,10 @@ export class Select {
 			linkElement.addEventListener('click', event => {
 				event.preventDefault()
 
-				const comments = JSON.parse(
-					localStorage.getItem('comment') as string
-				) as ICommentInfo[]
-
-				comments.sort((a, b) => a.voteCount - b.voteCount)
-				// console.log(comments.reverse())
-				this._commentsInfo = comments.reverse()
-				new CommentItems().draw()
-				console.log(new CommentItems().commentsWrapper)
+				commentItems.innerHTML = ''
+				new CommentItems().sortComments().forEach(item => {
+					commentItems.append(item)
+				})
 
 				const eventTargetElement = event.target as HTMLElement
 				spanNameSelected.innerText = `${eventTargetElement.textContent}`

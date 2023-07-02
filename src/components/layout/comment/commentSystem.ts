@@ -24,7 +24,7 @@ class CommentSystem {
 		this.commentSection.append(
 			this.commentForm.drawCommentPanel(),
 			this.commentForm.formElement,
-			this.commentItems.commentsWrapper
+			this.commentItems.draw()
 		)
 	}
 }
