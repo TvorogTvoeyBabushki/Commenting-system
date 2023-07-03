@@ -33,12 +33,34 @@ export class CommentItems {
 		return lastComment
 	}
 
-	public sortComments() {
-		this._commentsInfo
-			?.sort((a, b) => (a.voteCount as number) - (b.voteCount as number))
-			.reverse()
+	public sortComments(optionValue: string) {
+		if (optionValue === 'По количеству оценок') {
+			this._commentsInfo
+				?.sort((a, b) => (a.voteCount as number) - (b.voteCount as number))
+				.reverse()
+		}
+
+		if (optionValue === 'По актуальности') {
+			this._commentsInfo?.sort(
+				(a, b) => (a.date as number) - (b.date as number)
+			)
+		}
+
+		if (optionValue === 'По дате') {
+			this._commentsInfo
+				?.sort((a, b) => (a.date as number) - (b.date as number))
+				.reverse()
+		}
+
+		if (optionValue === 'По количеству ответов') {
+			// this._commentsInfo
+			// 	?.sort((a, b) => (a.date as number) - (b.date as number))
+			// 	.reverse()
+			return
+		}
 
 		this.draw()
+
 		const commentsItems = this.commentsWrapper.querySelectorAll('.comment_item')
 
 		return commentsItems

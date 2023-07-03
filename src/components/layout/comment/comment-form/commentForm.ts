@@ -23,9 +23,11 @@ class CommentForm {
 
 	private _commentInfo: ICommentInfo
 	private _comments: ICommentInfo[]
+
 	field: Field
 	button: Button
 	select: Select
+	selectOptionValues: string[]
 
 	constructor(commentItems: HTMLElement) {
 		this.formElement = document.createElement('form')
@@ -49,7 +51,7 @@ class CommentForm {
 			placeholder: 'Введите текст сообщения...',
 			name: 'comment'
 		}
-		const selectOptionValues = [
+		this.selectOptionValues = [
 			'По дате',
 			'По количеству оценок',
 			'По актуальности',
@@ -60,7 +62,7 @@ class CommentForm {
 		this.field = new Field(fieldProps, this.button.buttonElement)
 		this.select = new Select(
 			'sortComment',
-			selectOptionValues,
+			this.selectOptionValues,
 			this.commentItemsWrapper
 		)
 
@@ -123,6 +125,10 @@ class CommentForm {
 				'afterbegin',
 				newCommentItem
 			)
+			new CommentItems().sortComments('По количеству оценок')
+			// this.selectOptionValues.forEach(item =>
+
+			// )
 
 			textareaToForm.value = ''
 			this.field.resetWordCount()

@@ -101,9 +101,9 @@ export class Select {
 				event.preventDefault()
 
 				commentItems.innerHTML = ''
-				const sortCommentItems = new CommentItems().sortComments()
+				const sortCommentItems = new CommentItems().sortComments(optionValue)
 
-				sortCommentItems.forEach(item => {
+				sortCommentItems?.forEach(item => {
 					commentItems.append(item)
 				})
 
