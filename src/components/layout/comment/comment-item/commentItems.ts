@@ -1,3 +1,5 @@
+import moment from 'moment'
+
 import { ICommentInfo } from '../comment-form/commentForm'
 
 import styles from './commentItems.module.scss'
@@ -63,6 +65,7 @@ export class CommentItems {
 		this._commentsInfo?.forEach(commentInfo => {
 			this.commentsItem = document.createElement('div')
 			this.commentsItem.classList.add('comment_item')
+
 			const commentsItemImage = document.createElement('img')
 			const commentsItemInfo = document.createElement('div')
 			const commentsItemToolbar = new Toolbar(
@@ -85,7 +88,11 @@ export class CommentItems {
 				const paragraphElement = document.createElement('p')
 
 				if (elem === 'author' || elem === 'date') {
-					paragraphElement.innerText = `${commentInfo[elem]}`
+					elem === 'author'
+						? (paragraphElement.innerText = `${commentInfo[elem]}`)
+						: (paragraphElement.innerText = `${moment(
+								commentInfo[elem] as number
+						  ).format('DD.MM HH:mm')}`)
 					commentsItemInfoNameAndDate.append(paragraphElement)
 					commentsItemInfoWrapper.append(commentsItemInfoNameAndDate)
 				}

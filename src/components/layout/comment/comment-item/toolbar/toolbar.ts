@@ -15,11 +15,7 @@ class ToolBar {
 		this._voteCount = commentInfo.voteCount as number
 		this._commentInfo = commentInfo
 
-		if (localStorage.getItem('favorites')) {
-			this._favorites = [
-				...JSON.parse(localStorage.getItem('favorites') as string)
-			]
-		}
+		this.checkingLocalStorageKey()
 	}
 
 	private drawVoteCount() {
@@ -70,6 +66,14 @@ class ToolBar {
 		buttonElement.disabled = false
 
 		this.drawVoteCount()
+	}
+
+	private checkingLocalStorageKey() {
+		if (localStorage.getItem('favorites')) {
+			this._favorites = [
+				...JSON.parse(localStorage.getItem('favorites') as string)
+			]
+		}
 	}
 
 	public draw() {
@@ -140,27 +144,26 @@ class ToolBar {
 						}
 
 						if (isRemoveFavorites) {
-							const a = [
-								this._favorites.find(item => item === this._commentInfo)
-							]
-							const b = this._favorites.filter(item => !a.includes(item))
-							// проблемма когда добавил 2 коммента в локал и убираешь другой коммент то удаляется все
-							this._favorites = [...b]
-							localStorage.setItem('favorites', JSON.stringify(this._favorites))
+							this.checkingLocalStorageKey()
+
+							const updatedFavorites = this._favorites.filter(
+								item => item.date !== this._commentInfo.date
+							)
+
+							localStorage.setItem(
+								'favorites',
+								JSON.stringify(updatedFavorites)
+							)
 
 							isRemoveFavorites = false
 						} else {
-							if (localStorage.getItem('favorites')) {
-								this._favorites = [
-									...JSON.parse(localStorage.getItem('favorites') as string)
-								]
-							}
-
-							this._favorites.push(this._commentInfo)
-
-							localStorage.setItem('favorites', JSON.stringify(this._favorites))
+							this.checkingLocalStorageKey()
 
 							isRemoveFavorites = true
+
+							this._favorites.push({ ...this._commentInfo, isRemoveFavorites })
+
+							localStorage.setItem('favorites', JSON.stringify(this._favorites))
 						}
 				  })
 

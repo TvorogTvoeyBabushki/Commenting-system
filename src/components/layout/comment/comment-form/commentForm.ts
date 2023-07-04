@@ -5,12 +5,10 @@ import { Field } from '@/components/ui/field/field'
 import { Select } from '@/components/ui/select/select'
 import UserItem from '@/components/ui/user-item/userItem'
 
-import { CommentItems } from '../comment-item/commentItems'
-
 import styles from './commentForm.module.scss'
 
 export interface ICommentInfo {
-	[k: string]: string | Date | number
+	[k: string]: string | Date | number | boolean
 }
 
 class CommentForm {
@@ -108,9 +106,10 @@ class CommentForm {
 		if (textareaToForm?.value.trim()) {
 			this.userItem.getUserInfo.forEach(userInfo => {
 				this._commentInfo = {
+					id: userInfo.id.value,
 					author: `${userInfo.name.first} ${userInfo.name.last}`,
 					image: userInfo.picture.large,
-					date: moment(new Date()).format('DD.MM HH:mm'),
+					date: moment(new Date()).format('DD.MM HH:mm:ss.SSS'),
 					comment: textareaToForm.value.trim(),
 					voteCount: Math.round(Math.random() * 200 - 100)
 				}
