@@ -66,10 +66,10 @@ export class Field {
 			return
 		}
 
-		paragraphContent.forEach(item => {
+		paragraphContent.forEach(paragraphText => {
 			const paragraphElement = document.createElement('p')
 
-			paragraphElement.innerText = item
+			paragraphElement.innerText = paragraphText
 			this.divFieldValidation.append(paragraphElement)
 		})
 	}

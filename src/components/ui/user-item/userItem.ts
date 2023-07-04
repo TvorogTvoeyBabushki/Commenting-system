@@ -40,9 +40,9 @@ class UserItem {
 
 	private draw() {
 		this.getRandomUser((user: IUser[]) => {
-			user?.forEach(item => {
+			user?.forEach(userInfo => {
 				const imageProps = [
-					['src', item.picture.large],
+					['src', userInfo.picture.large],
 					['alt', 'user']
 				]
 
@@ -50,10 +50,10 @@ class UserItem {
 					this.imageUser.setAttribute(attr, val)
 				}
 
-				this.authorUser.append(item.name.first, ' ', item.name.last)
+				this.authorUser.append(userInfo.name.first, ' ', userInfo.name.last)
 				this.wrapperUser.append(this.imageUser, this.authorUser)
 
-				this._userInfo.push(item)
+				this._userInfo.push(userInfo)
 			})
 			this.getUserInfo = this._userInfo
 		})

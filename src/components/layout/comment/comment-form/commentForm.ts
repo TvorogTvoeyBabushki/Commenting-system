@@ -27,15 +27,16 @@ class CommentForm {
 	field: Field
 	button: Button
 	select: Select
-	selectOptionValues: string[]
 
-	constructor(commentItems: HTMLElement) {
+	isDrawSpanNoInternetConnectionElement = true
+
+	constructor(commentItemsWrapper: HTMLElement) {
 		this.formElement = document.createElement('form')
 		this.commentPanel = document.createElement('div')
 		this.commentPanelAmountComments = document.createElement('div')
 
 		this.userItem = new UserItem()
-		this.commentItemsWrapper = commentItems
+		this.commentItemsWrapper = commentItemsWrapper
 
 		this._commentInfo = {}
 		this._comments = []
@@ -51,7 +52,7 @@ class CommentForm {
 			placeholder: 'Введите текст сообщения...',
 			name: 'comment'
 		}
-		this.selectOptionValues = [
+		const selectOptionValues = [
 			'По дате',
 			'По количеству оценок',
 			'По актуальности',
@@ -62,7 +63,7 @@ class CommentForm {
 		this.field = new Field(fieldProps, this.button.buttonElement)
 		this.select = new Select(
 			'sortComment',
-			this.selectOptionValues,
+			selectOptionValues,
 			this.commentItemsWrapper
 		)
 
@@ -105,30 +106,41 @@ class CommentForm {
 		const textareaToForm = eventTarget.querySelector('textarea')
 
 		if (textareaToForm?.value.trim()) {
-			this.userItem.getUserInfo.forEach(item => {
+			this.userItem.getUserInfo.forEach(userInfo => {
 				this._commentInfo = {
-					author: `${item.name.first} ${item.name.last}`,
-					image: item.picture.large,
+					author: `${userInfo.name.first} ${userInfo.name.last}`,
+					image: userInfo.picture.large,
 					date: moment(new Date()).format('DD.MM HH:mm'),
 					comment: textareaToForm.value.trim(),
 					voteCount: Math.round(Math.random() * 200 - 100)
 				}
 			})
 
-			this._comments.push(this._commentInfo)
-			localStorage.setItem('comment', JSON.stringify(this._comments))
+			if (this._commentInfo.author) {
+				this._comments.push(this._commentInfo)
+				localStorage.setItem('comment', JSON.stringify(this._comments))
 
-			this.drawCommentPanel()
+				this.select.sortComments(
+					this.commentItemsWrapper,
+					this.select.getOptionValue
+				)
 
-			const newCommentItem = new CommentItems().update() as HTMLElement
-			this.commentItemsWrapper.insertAdjacentElement(
-				'afterbegin',
-				newCommentItem
-			)
-			new CommentItems().sortComments('По количеству оценок')
-			// this.selectOptionValues.forEach(item =>
+				this.drawCommentPanel()
+			} else {
+				const spanNoInternetConnectionElement = document.createElement('span')
 
-			// )
+				spanNoInternetConnectionElement.classList.add('no_internet_connection')
+				spanNoInternetConnectionElement.innerText = 'No internet connection'
+
+				if (this.isDrawSpanNoInternetConnectionElement) {
+					this.commentItemsWrapper.insertAdjacentElement(
+						'afterbegin',
+						spanNoInternetConnectionElement
+					)
+
+					this.isDrawSpanNoInternetConnectionElement = false
+				}
+			}
 
 			textareaToForm.value = ''
 			this.field.resetWordCount()

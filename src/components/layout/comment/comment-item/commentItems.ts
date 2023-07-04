@@ -26,13 +26,6 @@ export class CommentItems {
 		this.commentsWrapper.classList.add(styles.comments_wrapper)
 	}
 
-	public update() {
-		this.draw()
-		const lastComment = this.commentsWrapper.querySelector('div')
-
-		return lastComment
-	}
-
 	public sortComments(optionValue: string) {
 		if (optionValue === 'По количеству оценок') {
 			this._commentsInfo
@@ -61,21 +54,23 @@ export class CommentItems {
 
 		this.draw()
 
-		const commentsItems = this.commentsWrapper.querySelectorAll('.comment_item')
+		const commentItems = this.commentsWrapper.querySelectorAll('.comment_item')
 
-		return commentsItems
+		return commentItems
 	}
 
 	public draw() {
-		this._commentsInfo?.forEach(item => {
+		this._commentsInfo?.forEach(commentInfo => {
 			this.commentsItem = document.createElement('div')
 			this.commentsItem.classList.add('comment_item')
 			const commentsItemImage = document.createElement('img')
 			const commentsItemInfo = document.createElement('div')
-			const commentsItemToolbar = new Toolbar(item.voteCount as number).draw()
+			const commentsItemToolbar = new Toolbar(
+				commentInfo as ICommentInfo
+			).draw()
 
 			const imageProps = [
-				['src', `${item?.image}`],
+				['src', `${commentInfo?.image}`],
 				['alt', 'user']
 			]
 
@@ -86,17 +81,17 @@ export class CommentItems {
 			const commentsItemInfoWrapper = document.createElement('div')
 			const commentsItemInfoNameAndDate = document.createElement('div')
 
-			for (const elem in item) {
+			for (const elem in commentInfo) {
 				const paragraphElement = document.createElement('p')
 
 				if (elem === 'author' || elem === 'date') {
-					paragraphElement.innerText = `${item[elem]}`
+					paragraphElement.innerText = `${commentInfo[elem]}`
 					commentsItemInfoNameAndDate.append(paragraphElement)
 					commentsItemInfoWrapper.append(commentsItemInfoNameAndDate)
 				}
 
 				if (elem === 'comment') {
-					paragraphElement.innerText = `${item[elem]}`
+					paragraphElement.innerText = `${commentInfo[elem]}`
 
 					commentsItemInfoWrapper.append(paragraphElement)
 				}

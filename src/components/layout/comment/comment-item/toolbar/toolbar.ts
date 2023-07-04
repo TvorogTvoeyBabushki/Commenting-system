@@ -1,16 +1,25 @@
+import { ICommentInfo } from '../../comment-form/commentForm'
+import styles from '../commentItems.module.scss'
+
 class ToolBar {
-	spanVoteCount: HTMLElement
+	spanVoteCount: HTMLElement = document.createElement('span')
+
 	private _voteCount: number
+	private _commentInfo: ICommentInfo
+	private _favorites: ICommentInfo[] = []
 
-	private _isDecrement: boolean
-	private _isIncrement: boolean
+	private _isDecrement: boolean = true
+	private _isIncrement: boolean = true
 
-	constructor(voteCount: number) {
-		this.spanVoteCount = document.createElement('span')
-		this._voteCount = voteCount
+	constructor(commentInfo: ICommentInfo) {
+		this._voteCount = commentInfo.voteCount as number
+		this._commentInfo = commentInfo
 
-		this._isDecrement = true
-		this._isIncrement = true
+		if (localStorage.getItem('favorites')) {
+			this._favorites = [
+				...JSON.parse(localStorage.getItem('favorites') as string)
+			]
+		}
 	}
 
 	private drawVoteCount() {
@@ -82,6 +91,23 @@ class ToolBar {
 		const [answer, favorite] = ['Ответить', 'В избранное']
 		const [decrement, increment] = ['-', '+']
 
+		const fillHeartIconElement = document.createElement('img')
+		const propsFillHeartIconElement = [
+			['src', '/public/fill-heart.png'],
+			['alt', 'icon']
+		]
+
+		for (const [attr, val] of propsFillHeartIconElement) {
+			fillHeartIconElement.setAttribute(attr, val)
+		}
+		fillHeartIconElement.classList.add(styles.fill_heart)
+
+		let isRemoveFavorites = false
+		let isChangeTextFavoriteSpanElement = false
+
+		const favoriteSpanElement = document.createElement('span')
+		favoriteSpanElement.innerText = favorite
+
 		propsIconElement.forEach((item, index) => {
 			const iconElement = document.createElement('img')
 
@@ -90,9 +116,59 @@ class ToolBar {
 			}
 
 			const buttonElementLeft = document.createElement('button')
-			const buttonTextLeft = index === 0 ? answer : favorite
 
-			buttonElementLeft.append(iconElement, buttonTextLeft)
+			const buttonTextLeft = index === 0 ? answer : favoriteSpanElement
+
+			index === 0
+				? buttonElementLeft.addEventListener('click', () => {})
+				: buttonElementLeft.addEventListener('click', () => {
+						fillHeartIconElement.classList.toggle(styles.active)
+
+						// if (this._favorites.includes(this._commentInfo)) {
+						// 	console.log('s')
+						// 	fillHeartIconElement.classList.add(styles.active)
+						// }
+
+						if (isChangeTextFavoriteSpanElement) {
+							favoriteSpanElement.innerText = 'В избранное'
+
+							isChangeTextFavoriteSpanElement = false
+						} else {
+							favoriteSpanElement.innerText = 'В избранном'
+
+							isChangeTextFavoriteSpanElement = true
+						}
+
+						if (isRemoveFavorites) {
+							const a = [
+								this._favorites.find(item => item === this._commentInfo)
+							]
+							const b = this._favorites.filter(item => !a.includes(item))
+							// проблемма когда добавил 2 коммента в локал и убираешь другой коммент то удаляется все
+							this._favorites = [...b]
+							localStorage.setItem('favorites', JSON.stringify(this._favorites))
+
+							isRemoveFavorites = false
+						} else {
+							if (localStorage.getItem('favorites')) {
+								this._favorites = [
+									...JSON.parse(localStorage.getItem('favorites') as string)
+								]
+							}
+
+							this._favorites.push(this._commentInfo)
+
+							localStorage.setItem('favorites', JSON.stringify(this._favorites))
+
+							isRemoveFavorites = true
+						}
+				  })
+
+			buttonElementLeft.append(
+				fillHeartIconElement,
+				iconElement,
+				buttonTextLeft
+			)
 			toolbarItemLeft.append(buttonElementLeft)
 
 			const buttonElementRight = document.createElement('button')

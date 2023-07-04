@@ -76,6 +76,19 @@
 								left: 0;
 								transform: translateY(-50%);
 								transition: opacity 0.3s ease-in-out;
+
+								&.fill_heart {
+									display: none;
+									opacity: 1;
+
+									&.active {
+										display: block;
+
+										& ~ img {
+											display: none;
+										}
+									}
+								}
 							}
 						}
 					}

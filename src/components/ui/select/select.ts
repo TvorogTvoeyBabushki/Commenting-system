@@ -8,22 +8,24 @@ export class Select {
 	selectListElements: HTMLElement
 
 	previousSelect: string[]
+	optionValue: string
 
 	constructor(
 		selectNameAttr: string,
 		selectOptionValues: string[],
-		commentItems: HTMLElement
+		commentItemsWrapper: HTMLElement
 	) {
 		this.selectWrapper = document.createElement('div')
 		this.nameSelectedElement = document.createElement('div')
 		this.arrowSelectedElement = document.createElement('img')
 		this.selectListElements = document.createElement('ul')
 
-		this.previousSelect = ['По количеству оценок']
+		this.previousSelect = ['По актуальности']
+		this.optionValue = ''
 
 		this.addStyles()
 		this.addAttrIcon()
-		this.draw(selectOptionValues, selectNameAttr, commentItems)
+		this.draw(selectOptionValues, selectNameAttr, commentItemsWrapper)
 
 		this.showSortList()
 		this.closeSortList()
@@ -63,14 +65,31 @@ export class Select {
 		}
 	}
 
+	public get getOptionValue() {
+		return this.optionValue
+	}
+
+	private set getOptionValue(optionValue) {
+		this.optionValue = optionValue
+	}
+
+	public sortComments(commentItemsWrapper: HTMLElement, optionValue: string) {
+		commentItemsWrapper.innerHTML = ''
+		const commentItems = new CommentItems().sortComments(optionValue)
+
+		commentItems?.forEach(commentItem => {
+			commentItemsWrapper.append(commentItem)
+		})
+	}
+
 	private draw(
 		selectOptionValues: string[],
 		selectNameAttr: string,
-		commentItems: HTMLElement
+		commentItemsWrapper: HTMLElement
 	) {
 		const spanNameSelected = document.createElement('span')
 
-		spanNameSelected.innerText = 'По количеству оценок'
+		spanNameSelected.innerText = 'По актуальности'
 		spanNameSelected.classList.add(styles.active)
 
 		selectOptionValues.forEach(optionValue => {
@@ -99,13 +118,9 @@ export class Select {
 
 			linkElement.addEventListener('click', event => {
 				event.preventDefault()
+				this.getOptionValue = optionValue
 
-				commentItems.innerHTML = ''
-				const sortCommentItems = new CommentItems().sortComments(optionValue)
-
-				sortCommentItems?.forEach(item => {
-					commentItems.append(item)
-				})
+				this.sortComments(commentItemsWrapper, optionValue)
 
 				const eventTargetElement = event.target as HTMLElement
 				spanNameSelected.innerText = `${eventTargetElement.textContent}`
@@ -114,8 +129,8 @@ export class Select {
 					document?.querySelectorAll('.check_mark')
 
 				if (this.previousSelect.at(-1) !== eventTargetElement.textContent) {
-					checkMarkElements?.forEach(item => {
-						item.style.visibility = 'hidden'
+					checkMarkElements?.forEach(checkMarkElement => {
+						checkMarkElement.style.visibility = 'hidden'
 					})
 
 					checkMarkElement.style.visibility = 'visible'
