@@ -2,31 +2,24 @@ import styles from './select.module.scss'
 import { CommentItems } from '@/components/layout/comment/comment-item/commentItems'
 
 export class Select {
-	selectWrapper: HTMLElement
-	nameSelectedElement: HTMLElement
-	arrowSelectedElement: HTMLElement
-	selectListElements: HTMLElement
+	selectWrapper = document.createElement('div')
+	nameSelectedElement = document.createElement('div')
+	arrowSelectedElement = document.createElement('img')
+	selectListElements = document.createElement('ul')
 
-	previousSelect: string[]
-	optionValue: string
+	commentItemsWrapper: HTMLElement
+
+	previousSelect: string[] = ['По актуальности']
+	optionValue: string = ''
 
 	constructor(
 		selectNameAttr: string,
 		selectOptionValues: string[],
 		commentItemsWrapper: HTMLElement
 	) {
-		this.selectWrapper = document.createElement('div')
-		this.nameSelectedElement = document.createElement('div')
-		this.arrowSelectedElement = document.createElement('img')
-		this.selectListElements = document.createElement('ul')
+		this.commentItemsWrapper = commentItemsWrapper
 
-		this.previousSelect = ['По актуальности']
-		this.optionValue = ''
-
-		this.addStyles()
-		this.addAttrIcon()
-		this.draw(selectOptionValues, selectNameAttr, commentItemsWrapper)
-
+		this.draw(selectOptionValues, selectNameAttr)
 		this.showSortList()
 		this.closeSortList()
 	}
@@ -73,20 +66,16 @@ export class Select {
 		this.optionValue = optionValue
 	}
 
-	public sortComments(commentItemsWrapper: HTMLElement, optionValue: string) {
-		commentItemsWrapper.innerHTML = ''
-		const commentItems = new CommentItems().sortComments(optionValue)
+	public sortComments() {
+		this.commentItemsWrapper.innerHTML = ''
+		const commentItems = new CommentItems().sortComments(this.getOptionValue)
 
 		commentItems?.forEach(commentItem => {
-			commentItemsWrapper.append(commentItem)
+			this.commentItemsWrapper.append(commentItem)
 		})
 	}
 
-	private draw(
-		selectOptionValues: string[],
-		selectNameAttr: string,
-		commentItemsWrapper: HTMLElement
-	) {
+	private draw(selectOptionValues: string[], selectNameAttr: string) {
 		const spanNameSelected = document.createElement('span')
 
 		spanNameSelected.innerText = 'По актуальности'
@@ -118,9 +107,10 @@ export class Select {
 
 			linkElement.addEventListener('click', event => {
 				event.preventDefault()
+
 				this.getOptionValue = optionValue
 
-				this.sortComments(commentItemsWrapper, optionValue)
+				this.sortComments()
 
 				const eventTargetElement = event.target as HTMLElement
 				spanNameSelected.innerText = `${eventTargetElement.textContent}`
@@ -149,5 +139,8 @@ export class Select {
 
 		this.nameSelectedElement.append(spanNameSelected, this.arrowSelectedElement)
 		this.selectWrapper.append(this.nameSelectedElement, this.selectListElements)
+
+		this.addStyles()
+		this.addAttrIcon()
 	}
 }

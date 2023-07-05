@@ -1,6 +1,5 @@
-import moment from 'moment'
-
 import { Button } from '@/components/ui/button/button'
+import { Favorite } from '@/components/ui/favorite/favorite'
 import { Field } from '@/components/ui/field/field'
 import { Select } from '@/components/ui/select/select'
 import UserItem from '@/components/ui/user-item/userItem'
@@ -12,32 +11,25 @@ export interface ICommentInfo {
 }
 
 class CommentForm {
-	formElement: HTMLFormElement
-	commentPanel: HTMLElement
-	commentPanelAmountComments: HTMLElement
+	formElement = document.createElement('form')
+	commentPanel = document.createElement('div')
+	commentPanelAmountComments = document.createElement('button')
 
-	userItem: UserItem
-	commentItemsWrapper
+	userItem: UserItem = new UserItem()
+	commentItemsWrapper: HTMLElement
 
-	private _commentInfo: ICommentInfo
-	private _comments: ICommentInfo[]
+	private _commentInfo: ICommentInfo = {}
+	private _comments: ICommentInfo[] = []
 
 	field: Field
 	button: Button
 	select: Select
+	favorite: Favorite
 
 	isDrawSpanNoInternetConnectionElement = true
 
 	constructor(commentItemsWrapper: HTMLElement) {
-		this.formElement = document.createElement('form')
-		this.commentPanel = document.createElement('div')
-		this.commentPanelAmountComments = document.createElement('div')
-
-		this.userItem = new UserItem()
 		this.commentItemsWrapper = commentItemsWrapper
-
-		this._commentInfo = {}
-		this._comments = []
 
 		if (localStorage.getItem('comment')) {
 			this._comments = [
@@ -64,6 +56,7 @@ class CommentForm {
 			selectOptionValues,
 			this.commentItemsWrapper
 		)
+		this.favorite = new Favorite()
 
 		this.addStyles()
 		this.addElementToForm()
@@ -73,14 +66,41 @@ class CommentForm {
 	private addStyles() {
 		this.commentPanel.classList.add(styles.comment_panel)
 		this.formElement.classList.add(styles.form)
+		this.commentPanelAmountComments.classList.add(styles.active)
+	}
+
+	private drawAmountComments() {
+		this.commentPanelAmountComments.innerHTML = `Комментарии <span>(${this._comments.length})</span>`
+		this.commentPanelAmountComments.onclick = () => {
+			if (this.favorite._isShowAllComments) {
+				this.commentItemsWrapper.innerHTML = ''
+				this.select.sortComments()
+
+				const nodeListButtons = [
+					...this.commentPanel.querySelectorAll('button')
+				]
+				nodeListButtons
+					.at(-1)
+					?.classList.remove(this.favorite.getStyle().active)
+
+				this.commentPanelAmountComments.classList.add(styles.active)
+				this.favorite._isShowAllComments = false
+			}
+		}
 	}
 
 	public drawCommentPanel() {
-		this.commentPanelAmountComments.innerHTML = `Комментарии <span>(${this._comments.length})</span>`
+		this.drawAmountComments()
 
 		this.commentPanel.append(
 			this.commentPanelAmountComments,
-			this.select.selectWrapper
+			this.select.selectWrapper,
+			this.favorite.draw(
+				'Избранное',
+				this.commentItemsWrapper,
+				this.commentPanelAmountComments,
+				styles
+			)
 		)
 
 		return this.commentPanel
@@ -109,7 +129,7 @@ class CommentForm {
 					id: userInfo.id.value,
 					author: `${userInfo.name.first} ${userInfo.name.last}`,
 					image: userInfo.picture.large,
-					date: moment(new Date()).format('DD.MM HH:mm:ss.SSS'),
+					date: new Date(),
 					comment: textareaToForm.value.trim(),
 					voteCount: Math.round(Math.random() * 200 - 100)
 				}
@@ -119,12 +139,9 @@ class CommentForm {
 				this._comments.push(this._commentInfo)
 				localStorage.setItem('comment', JSON.stringify(this._comments))
 
-				this.select.sortComments(
-					this.commentItemsWrapper,
-					this.select.getOptionValue
-				)
+				this.select.sortComments()
 
-				this.drawCommentPanel()
+				this.drawAmountComments()
 			} else {
 				const spanNoInternetConnectionElement = document.createElement('span')
 
