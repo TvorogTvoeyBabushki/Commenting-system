@@ -1,79 +1,11 @@
 import { ICommentInfo } from '../../comment-form/commentForm'
 import styles from '../commentItems.module.scss'
 
-class ToolBar {
-	spanVoteCount: HTMLElement = document.createElement('span')
+import { ToolBarUtils } from './toolbarUtils'
 
-	private _voteCount: number
-	private _commentInfo: ICommentInfo
-	private _favorites: ICommentInfo[] = []
-
-	private _isDecrement: boolean = true
-	private _isIncrement: boolean = true
-
+class ToolBar extends ToolBarUtils {
 	constructor(commentInfo: ICommentInfo) {
-		this._voteCount = commentInfo.voteCount as number
-		this._commentInfo = commentInfo
-
-		this.checkingLocalStorageKey()
-	}
-
-	private drawVoteCount() {
-		this._voteCount > 0
-			? (this.spanVoteCount.style.color = '#8AC540')
-			: this._voteCount < 0
-			? (this.spanVoteCount.style.color = '#F00')
-			: (this.spanVoteCount.style.color = '#000')
-
-		this.spanVoteCount.innerText = `${this._voteCount}`
-
-		return this.spanVoteCount
-	}
-
-	private decrement = (event: MouseEvent) => {
-		event.preventDefault()
-		const buttonElement = event.target as HTMLButtonElement
-
-		if (this._isDecrement && !this._isIncrement) {
-			this._voteCount--
-			this._isIncrement = true
-		} else if (this._isDecrement) {
-			this._voteCount--
-			this._isDecrement = false
-		} else {
-			buttonElement.disabled = true
-		}
-
-		buttonElement.disabled = false
-
-		this.drawVoteCount()
-	}
-
-	private increment = (event: MouseEvent) => {
-		event.preventDefault()
-		const buttonElement = event.target as HTMLButtonElement
-
-		if (!this._isDecrement && this._isIncrement) {
-			this._voteCount++
-			this._isDecrement = true
-		} else if (this._isIncrement) {
-			this._voteCount++
-			this._isIncrement = false
-		} else {
-			buttonElement.disabled = true
-		}
-
-		buttonElement.disabled = false
-
-		this.drawVoteCount()
-	}
-
-	private checkingLocalStorageKey() {
-		if (localStorage.getItem('favorites')) {
-			this._favorites = [
-				...JSON.parse(localStorage.getItem('favorites') as string)
-			]
-		}
+		super(commentInfo)
 	}
 
 	public draw() {
@@ -106,11 +38,15 @@ class ToolBar {
 		}
 		fillHeartIconElement.classList.add(styles.fill_heart)
 
-		let isRemoveFavorites = false
-		let isChangeTextFavoriteSpanElement = false
-
 		const favoriteSpanElement = document.createElement('span')
 		favoriteSpanElement.innerText = favorite
+
+		if (this._commentInfo.isRemoveFavorites) {
+			fillHeartIconElement.classList.add(styles.active)
+
+			favoriteSpanElement.innerText = 'В избранном'
+			this._isChangeTextFavoriteSpanElement = true
+		}
 
 		propsIconElement.forEach((item, index) => {
 			const iconElement = document.createElement('img')
@@ -125,47 +61,13 @@ class ToolBar {
 
 			index === 0
 				? buttonElementLeft.addEventListener('click', () => {})
-				: buttonElementLeft.addEventListener('click', () => {
-						fillHeartIconElement.classList.toggle(styles.active)
-
-						// if (this._favorites.includes(this._commentInfo)) {
-						// 	console.log('s')
-						// 	fillHeartIconElement.classList.add(styles.active)
-						// }
-
-						if (isChangeTextFavoriteSpanElement) {
-							favoriteSpanElement.innerText = 'В избранное'
-
-							isChangeTextFavoriteSpanElement = false
-						} else {
-							favoriteSpanElement.innerText = 'В избранном'
-
-							isChangeTextFavoriteSpanElement = true
-						}
-
-						if (isRemoveFavorites) {
-							this.checkingLocalStorageKey()
-
-							const updatedFavorites = this._favorites.filter(
-								item => item.date !== this._commentInfo.date
-							)
-
-							localStorage.setItem(
-								'favorites',
-								JSON.stringify(updatedFavorites)
-							)
-
-							isRemoveFavorites = false
-						} else {
-							this.checkingLocalStorageKey()
-
-							isRemoveFavorites = true
-
-							this._favorites.push({ ...this._commentInfo, isRemoveFavorites })
-
-							localStorage.setItem('favorites', JSON.stringify(this._favorites))
-						}
-				  })
+				: buttonElementLeft.addEventListener('click', () =>
+						this.addCommentToFavorite(
+							styles,
+							fillHeartIconElement,
+							favoriteSpanElement
+						)
+				  )
 
 			buttonElementLeft.append(
 				fillHeartIconElement,

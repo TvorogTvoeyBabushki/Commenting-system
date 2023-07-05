@@ -54,6 +54,12 @@ export class CommentItems {
 			return
 		}
 
+		if (optionValue === 'Избранное') {
+			this._commentsInfo = [
+				...JSON.parse(localStorage.getItem('favorites') as string)
+			]
+		}
+
 		this.draw()
 
 		const commentItems = this.commentsWrapper.querySelectorAll('.comment_item')
@@ -93,6 +99,7 @@ export class CommentItems {
 						: (paragraphElement.innerText = `${moment(
 								commentInfo[elem] as number
 						  ).format('DD.MM HH:mm')}`)
+
 					commentsItemInfoNameAndDate.append(paragraphElement)
 					commentsItemInfoWrapper.append(commentsItemInfoNameAndDate)
 				}
