@@ -2,7 +2,6 @@
 
 .comments_wrapper {
 	> div {
-		display: flex;
 		position: relative;
 		padding-left: 91px;
 		margin-bottom: 50px;
@@ -38,93 +37,118 @@
 			}
 
 			> div:last-child {
-				> div {
-					display: flex;
-					align-items: center;
-					margin-top: 15px;
+				display: flex;
+				align-items: center;
+				margin-top: 15px;
 
-					> div:first-child {
-						> button:first-child {
-							margin-right: 19px;
+				> div:first-child {
+					> button:first-child {
+						margin-right: 19px;
+					}
+
+					> button {
+						margin: 0;
+						padding: 5px 0 5px 34px;
+						color: rgba($black, 0.4);
+						background-color: transparent;
+						border: 0;
+						position: relative;
+						transition: color 0.3s ease-in-out;
+
+						&:hover {
+							color: rgba($black, 0.7);
 						}
 
-						> button {
+						&:hover img {
+							opacity: 1;
+						}
+
+						> img {
+							width: 26px;
+							height: 25px;
 							margin: 0;
-							padding: 5px 0 5px 34px;
-							color: rgba($black, 0.4);
-							background-color: transparent;
-							border: 0;
-							position: relative;
-							transition: color 0.3s ease-in-out;
+							opacity: 0.5;
 
-							&:hover {
-								color: rgba($black, 0.7);
-							}
+							position: absolute;
+							top: 50%;
+							left: 0;
+							transform: translateY(-50%);
+							transition: opacity 0.3s ease-in-out;
 
-							&:hover img {
+							&.fill_heart {
+								display: none;
 								opacity: 1;
-							}
 
-							> img {
-								width: 26px;
-								height: 25px;
-								margin: 0;
-								opacity: 0.5;
+								&.active {
+									display: block;
 
-								position: absolute;
-								top: 50%;
-								left: 0;
-								transform: translateY(-50%);
-								transition: opacity 0.3s ease-in-out;
-
-								&.fill_heart {
-									display: none;
-									opacity: 1;
-
-									&.active {
-										display: block;
-
-										& ~ img {
-											display: none;
-										}
+									& ~ img {
+										display: none;
 									}
 								}
 							}
 						}
 					}
+				}
 
-					> div:last-child {
+				> div:last-child {
+					display: flex;
+					align-items: center;
+					margin-left: 30px;
+
+					> button {
 						display: flex;
+						justify-content: center;
 						align-items: center;
-						margin-left: 30px;
+						width: 25px;
+						height: 25px;
+						background-color: rgba($black, 0.1);
+						border-radius: 50%;
+						font-weight: 500;
+						transition: background-color 0.3s ease-in-out;
 
-						> button {
-							display: flex;
-							justify-content: center;
-							align-items: center;
-							width: 25px;
-							height: 25px;
-							background-color: rgba($black, 0.1);
-							border-radius: 50%;
-							font-weight: 500;
-							transition: background-color 0.3s ease-in-out;
-
-							&:hover {
-								background-color: rgba($black, 0.2);
-							}
-						}
-
-						> button:first-child {
-							color: $red;
-							margin-right: 10px;
-						}
-
-						> button:last-child {
-							color: $green;
-							margin-left: 10px;
+						&:hover {
+							background-color: rgba($black, 0.2);
 						}
 					}
+
+					> button:first-child {
+						color: $red;
+						margin-right: 10px;
+					}
+
+					> button:last-child {
+						color: $green;
+						margin-left: 10px;
+					}
 				}
+			}
+		}
+
+		> div ~ div {
+			display: flex;
+
+			> form {
+				margin-bottom: 0;
+				flex-grow: 1;
+
+				> div:last-child {
+					> p:last-child {
+						width: 154px;
+						text-align: center;
+					}
+				}
+			}
+
+			> button {
+				align-self: flex-start;
+				margin-top: 37px;
+				margin-left: 30px;
+			}
+
+			button {
+				padding: 20px 30px;
+				width: 154px;
 			}
 		}
 	}

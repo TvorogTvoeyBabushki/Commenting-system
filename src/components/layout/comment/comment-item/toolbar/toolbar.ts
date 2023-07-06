@@ -1,4 +1,6 @@
-import { ICommentInfo } from '../../comment-form/commentForm'
+import { Button } from '@/components/ui/button/button'
+
+import CommentForm, { ICommentInfo } from '../../comment-form/commentForm'
 import styles from '../commentItems.module.scss'
 
 import { ToolBarUtils } from './toolbarUtils'
@@ -8,8 +10,7 @@ class ToolBar extends ToolBarUtils {
 		super(commentInfo)
 	}
 
-	public draw() {
-		const toolbar = document.createElement('div')
+	public draw(commentsItem: HTMLElement) {
 		const toolbarWrapper = document.createElement('div')
 		const toolbarItemLeft = document.createElement('div')
 		const toolbarItemRight = document.createElement('div')
@@ -56,11 +57,40 @@ class ToolBar extends ToolBarUtils {
 			}
 
 			const buttonElementLeft = document.createElement('button')
-
 			const buttonTextLeft = index === 0 ? answer : favoriteSpanElement
 
+			const replyToCommentWrapper = document.createElement('div')
+
 			index === 0
-				? buttonElementLeft.addEventListener('click', () => {})
+				? buttonElementLeft.addEventListener('click', () => {
+						const replyToCommentForm = new CommentForm().formElement
+						const buttonReplyToCommentForm = replyToCommentForm.querySelector(
+							'button'
+						) as HTMLButtonElement
+						const cancelReplyToComment = new Button().draw('Отмена')
+
+						replyToCommentWrapper.style.marginTop = '50px'
+
+						replyToCommentWrapper.append(
+							replyToCommentForm,
+							cancelReplyToComment
+						)
+						commentsItem.append(replyToCommentWrapper)
+
+						buttonElementLeft.disabled = true
+
+						buttonReplyToCommentForm.onclick = e => {
+							e.preventDefault()
+							console.log(new CommentForm())
+						}
+
+						cancelReplyToComment.onclick = () => {
+							replyToCommentWrapper.style.marginTop = '0'
+							replyToCommentWrapper.innerHTML = ''
+
+							buttonElementLeft.disabled = false
+						}
+				  })
 				: buttonElementLeft.addEventListener('click', () =>
 						this.addCommentToFavorite(
 							styles,
@@ -90,10 +120,9 @@ class ToolBar extends ToolBarUtils {
 			previousButton?.nextElementSibling?.before(this.drawVoteCount())
 
 			toolbarWrapper.append(toolbarItemLeft, toolbarItemRight)
-			toolbar.append(toolbarWrapper)
 		})
 
-		return toolbar
+		return toolbarWrapper
 	}
 }
 

@@ -1,20 +1,16 @@
 import CommentForm from './comment-form/commentForm'
 import { CommentItems } from './comment-item/commentItems'
+import { CommentPanel } from './comment-panel/commentPanel'
 import styles from './commentSystem.module.scss'
 
 class CommentSystem {
-	commentSection: HTMLElement
-	commentForm: CommentForm
-	commentItems: CommentItems
-
-	constructor() {
-		this.commentSection = document.createElement('section')
-		this.commentItems = new CommentItems()
-		this.commentForm = new CommentForm(this.commentItems.commentsWrapper)
-
-		this.addStyle()
-		this.draw()
-	}
+	commentSection = document.createElement('section')
+	commentItems = new CommentItems()
+	commentPanel = new CommentPanel(this.commentItems.commentsWrapper)
+	commentForm = new CommentForm(
+		this.commentItems.commentsWrapper,
+		this.commentPanel
+	)
 
 	private addStyle() {
 		this.commentSection.classList.add(styles.comment_system)
@@ -22,10 +18,14 @@ class CommentSystem {
 
 	public draw() {
 		this.commentSection.append(
-			this.commentForm.drawCommentPanel(),
-			this.commentForm.formElement,
+			this.commentPanel.drawCommentPanel(this.commentForm.getCommentsLength),
+			this.commentForm.draw(),
 			this.commentItems.draw()
 		)
+
+		this.addStyle()
+
+		return this.commentSection
 	}
 }
 

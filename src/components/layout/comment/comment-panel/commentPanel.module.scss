@@ -1,0 +1,35 @@
+@import '@/assets/styles/variables';
+
+.comment_panel {
+	display: flex;
+	align-items: baseline;
+	margin-bottom: 32px;
+
+	> button:first-child {
+		font-weight: 500;
+		color: rgba($black, 0.4);
+		padding-bottom: 5px;
+		background-color: transparent;
+		transition: all 0.2s ease;
+
+		> span {
+			margin-left: 10px;
+			font-size: 20px;
+			color: rgba($black, 0.4);
+			transition: color 0.2s ease;
+		}
+
+		&.active {
+			border-bottom: 2px solid $black;
+			color: rgba($black, 1);
+		}
+
+		&:hover:not(&.active) {
+			color: rgba($black, 0.7);
+
+			> span {
+				color: rgba($black, 0.7);
+			}
+		}
+	}
+}

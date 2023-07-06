@@ -9,22 +9,11 @@ interface IUser {
 }
 
 class UserItem {
-	wrapperUser: HTMLElement
-	imageUser: HTMLElement
-	authorUser: HTMLElement
+	wrapperUser = document.createElement('div')
+	imageUser = document.createElement('img')
+	authorUser = document.createElement('p')
 
-	private _userInfo: IUser[]
-
-	constructor() {
-		this.wrapperUser = document.createElement('div')
-		this.imageUser = document.createElement('img')
-		this.authorUser = document.createElement('p')
-
-		this._userInfo = []
-
-		this.draw()
-		this.addStyle()
-	}
+	private _userInfo: IUser[] = []
 
 	private addStyle() {
 		this.wrapperUser.classList.add(styles.wrapper_user)
@@ -38,7 +27,7 @@ class UserItem {
 		this._userInfo = user
 	}
 
-	private draw() {
+	public draw() {
 		this.getRandomUser((user: IUser[]) => {
 			user?.forEach(userInfo => {
 				const imageProps = [
@@ -57,6 +46,9 @@ class UserItem {
 			})
 			this.getUserInfo = this._userInfo
 		})
+
+		this.addStyle()
+		return this.wrapperUser
 	}
 
 	private async getRandomUser(onSuccess: (arg: IUser[]) => void) {

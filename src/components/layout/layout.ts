@@ -1,34 +1,27 @@
 import CommentSystem from './comment/commentSystem'
 import Footer from './footer/footer'
 import styles from './layout.module.scss'
-import { AppDivElement } from '@/constants/appDivElement'
 
-class Layout extends AppDivElement {
-	sectionElement: HTMLElement | null | undefined
-	children: Node
-	footer: Footer
-	commentSystem: CommentSystem
+class Layout {
+	sectionElement = document.createElement('section')
 
-	constructor(children: HTMLElement) {
-		super()
+	footer = new Footer()
+	commentSystem = new CommentSystem()
 
-		this.app
-		this.sectionElement
-		this.children = children
-		this.footer = new Footer()
-		this.commentSystem = new CommentSystem()
+	private addStyle() {
+		this.sectionElement.classList.add(styles.layout)
 	}
 
-	public createAndDraw() {
-		this.sectionElement = document.createElement('section')
-		this.sectionElement.classList.add(styles.layout)
-
-		this.sectionElement?.append(
-			this.children,
-			this.footer.footerElement,
-			this.commentSystem.commentSection
+	public draw(children: HTMLElement) {
+		this.sectionElement.append(
+			children,
+			this.footer.draw(),
+			this.commentSystem.draw()
 		)
-		this.app?.append(this.sectionElement)
+
+		this.addStyle()
+
+		return this.sectionElement
 	}
 }
 

@@ -3,11 +3,13 @@ import { CommentItems } from '@/components/layout/comment/comment-item/commentIt
 
 export class Select {
 	selectWrapper = document.createElement('div')
-	nameSelectedElement = document.createElement('div')
+	nameSelectedElement = document.createElement('button')
 	arrowSelectedElement = document.createElement('img')
 	selectListElements = document.createElement('ul')
 
 	commentItemsWrapper: HTMLElement
+	stylesCommentPanel: CSSModuleClasses
+	stylesFavorite: CSSModuleClasses
 
 	previousSelect: string[] = ['По актуальности']
 	optionValue: string = ''
@@ -15,9 +17,13 @@ export class Select {
 	constructor(
 		selectNameAttr: string,
 		selectOptionValues: string[],
-		commentItemsWrapper: HTMLElement
+		commentItemsWrapper: HTMLElement,
+		stylesCommentPanel: CSSModuleClasses,
+		stylesFavorite: CSSModuleClasses
 	) {
 		this.commentItemsWrapper = commentItemsWrapper
+		this.stylesCommentPanel = stylesCommentPanel
+		this.stylesFavorite = stylesFavorite
 
 		this.draw(selectOptionValues, selectNameAttr)
 		this.showSortList()
@@ -73,6 +79,14 @@ export class Select {
 		commentItems?.forEach(commentItem => {
 			this.commentItemsWrapper.append(commentItem)
 		})
+
+		const parentElementSelectWrapper = this.selectWrapper.parentElement
+		const nodeListButtons = [
+			...parentElementSelectWrapper!.querySelectorAll('button')
+		]
+
+		nodeListButtons.at(0)?.classList.add(this.stylesCommentPanel.active)
+		nodeListButtons.at(-1)?.classList.remove(this.stylesFavorite.active)
 	}
 
 	private draw(selectOptionValues: string[], selectNameAttr: string) {

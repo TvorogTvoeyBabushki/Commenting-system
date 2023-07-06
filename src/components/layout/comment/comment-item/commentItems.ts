@@ -6,22 +6,17 @@ import styles from './commentItems.module.scss'
 import Toolbar from './toolbar/toolbar'
 
 export class CommentItems {
-	commentsWrapper: HTMLElement
+	commentsWrapper = document.createElement('div')
 	commentsItem: HTMLElement | undefined
 
-	private _commentsInfo: ICommentInfo[] | undefined
+	private _commentsInfo: ICommentInfo[] = []
 
 	constructor() {
-		this.commentsWrapper = document.createElement('div')
-		this.commentsItem
-
 		if (localStorage.getItem('comment')) {
 			this._commentsInfo = [
 				...JSON.parse(localStorage.getItem('comment') as string)
 			].reverse()
 		}
-
-		this.addStyle()
 	}
 
 	private addStyle() {
@@ -74,9 +69,9 @@ export class CommentItems {
 
 			const commentsItemImage = document.createElement('img')
 			const commentsItemInfo = document.createElement('div')
-			const commentsItemToolbar = new Toolbar(
-				commentInfo as ICommentInfo
-			).draw()
+			const commentsItemToolbar = new Toolbar(commentInfo as ICommentInfo).draw(
+				this.commentsItem
+			)
 
 			const imageProps = [
 				['src', `${commentInfo?.image}`],
@@ -115,6 +110,8 @@ export class CommentItems {
 			this.commentsItem.append(commentsItemImage, commentsItemInfo)
 			this.commentsWrapper.append(this.commentsItem)
 		})
+
+		this.addStyle()
 
 		return this.commentsWrapper
 	}

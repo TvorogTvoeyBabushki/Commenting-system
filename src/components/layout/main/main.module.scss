@@ -1,0 +1,19 @@
+@import '@/assets/styles/variables';
+
+.main {
+	display: flex;
+	flex-wrap: wrap;
+	margin-bottom: 10px;
+}
+
+.divElement {
+	width: 100%;
+	max-width: 487px;
+	height: 61px;
+	background-color: $bg-block;
+	margin-bottom: 30px;
+
+	&:nth-child(odd) {
+		margin-right: 48px;
+	}
+}

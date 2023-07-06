@@ -5,8 +5,8 @@ interface IFieldProps {
 }
 
 export class Field {
-	textareaElement: HTMLTextAreaElement = document.createElement('textarea')
-	divFieldValidation: HTMLElement
+	textareaElement = document.createElement('textarea')
+	divFieldValidation = document.createElement('div')
 	buttonElement: HTMLButtonElement
 
 	private _props: [string, string][]
@@ -14,12 +14,16 @@ export class Field {
 
 	constructor(props: IFieldProps, buttonElement: HTMLButtonElement) {
 		this._props = Object.entries(props)
-		this.divFieldValidation = document.createElement('div')
 		this.buttonElement = buttonElement
 
+		this.handleTextarea()
+	}
+
+	public draw() {
 		this.addStyle()
 		this.addAttribute()
-		this.handleTextarea()
+
+		return this.textareaElement
 	}
 
 	public resetWordCount() {
@@ -55,7 +59,7 @@ export class Field {
 			const lastParagraphElement =
 				firstParagraphElement?.nextElementSibling as HTMLElement
 
-			firstParagraphElement!.innerText = `${this._wordCount}/1000`
+			firstParagraphElement.innerText = `${this._wordCount}/1000`
 
 			this._wordCount > 1000
 				? ((lastParagraphElement.style.visibility = 'visible'),
@@ -72,6 +76,8 @@ export class Field {
 			paragraphElement.innerText = paragraphText
 			this.divFieldValidation.append(paragraphElement)
 		})
+
+		return this.divFieldValidation
 	}
 
 	private autoResizeAndChangeWordCount(event: Event) {

@@ -6,7 +6,7 @@
 	> .name {
 		display: flex;
 		align-items: center;
-		cursor: pointer;
+		background-color: transparent;
 		margin-bottom: 15px;
 
 		> span {
@@ -14,19 +14,19 @@
 			opacity: 0.4;
 			border-bottom: 1px solid $black;
 			transition: opacity 0.2s ease;
+		}
 
-			&:hover {
-				opacity: 0.7;
-			}
+		&:hover > span {
+			opacity: 0.7;
 		}
 
 		> img {
-			animation: rotate-second-half 0.4s ease-in-out;
 			width: 16px;
 			height: 12px;
 			border-radius: 0;
 			margin-left: 10px;
 			margin-top: 5px;
+			animation: rotate-second-half 0.4s ease-in-out;
 
 			&.active {
 				animation: rotate-first-half 0.4s ease-in-out;

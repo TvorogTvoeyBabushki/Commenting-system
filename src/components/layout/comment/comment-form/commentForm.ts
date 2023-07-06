@@ -1,8 +1,8 @@
 import { Button } from '@/components/ui/button/button'
-import { Favorite } from '@/components/ui/favorite/favorite'
 import { Field } from '@/components/ui/field/field'
-import { Select } from '@/components/ui/select/select'
 import UserItem from '@/components/ui/user-item/userItem'
+
+import { CommentPanel } from '../comment-panel/commentPanel'
 
 import styles from './commentForm.module.scss'
 
@@ -12,24 +12,25 @@ export interface ICommentInfo {
 
 class CommentForm {
 	formElement = document.createElement('form')
-	commentPanel = document.createElement('div')
-	commentPanelAmountComments = document.createElement('button')
 
-	userItem: UserItem = new UserItem()
+	userItem = new UserItem()
 	commentItemsWrapper: HTMLElement
+	commentPanel: CommentPanel
 
 	private _commentInfo: ICommentInfo = {}
 	private _comments: ICommentInfo[] = []
 
 	field: Field
-	button: Button
-	select: Select
-	favorite: Favorite
+	button = new Button()
 
 	isDrawSpanNoInternetConnectionElement = true
 
-	constructor(commentItemsWrapper: HTMLElement) {
-		this.commentItemsWrapper = commentItemsWrapper
+	constructor(
+		commentItemsWrapper: HTMLElement | null = null,
+		commentPanel: CommentPanel
+	) {
+		this.commentItemsWrapper = commentItemsWrapper as HTMLElement
+		this.commentPanel = commentPanel
 
 		if (localStorage.getItem('comment')) {
 			this._comments = [
@@ -42,79 +43,36 @@ class CommentForm {
 			placeholder: 'Введите текст сообщения...',
 			name: 'comment'
 		}
-		const selectOptionValues = [
-			'По дате',
-			'По количеству оценок',
-			'По актуальности',
-			'По количеству ответов'
-		]
-
-		this.button = new Button('Отправить')
 		this.field = new Field(fieldProps, this.button.buttonElement)
-		this.select = new Select(
-			'sortComment',
-			selectOptionValues,
-			this.commentItemsWrapper
-		)
-		this.favorite = new Favorite()
-
-		this.addStyles()
-		this.addElementToForm()
-		this.handleForm()
 	}
 
 	private addStyles() {
-		this.commentPanel.classList.add(styles.comment_panel)
 		this.formElement.classList.add(styles.form)
-		this.commentPanelAmountComments.classList.add(styles.active)
 	}
 
-	private drawAmountComments() {
-		this.commentPanelAmountComments.innerHTML = `Комментарии <span>(${this._comments.length})</span>`
-		this.commentPanelAmountComments.onclick = () => {
-			if (this.favorite._isShowAllComments) {
-				this.commentItemsWrapper.innerHTML = ''
-				this.select.sortComments()
-
-				const nodeListButtons = [
-					...this.commentPanel.querySelectorAll('button')
-				]
-				nodeListButtons
-					.at(-1)
-					?.classList.remove(this.favorite.getStyle().active)
-
-				this.commentPanelAmountComments.classList.add(styles.active)
-				this.favorite._isShowAllComments = false
-			}
-		}
-	}
-
-	public drawCommentPanel() {
-		this.drawAmountComments()
-
-		this.commentPanel.append(
-			this.commentPanelAmountComments,
-			this.select.selectWrapper,
-			this.favorite.draw(
-				'Избранное',
-				this.commentItemsWrapper,
-				this.commentPanelAmountComments,
-				styles
-			)
-		)
-
-		return this.commentPanel
-	}
-
-	private addElementToForm() {
-		this.field.drawFieldValidation()
-
+	public draw() {
 		this.formElement.append(
-			this.userItem.wrapperUser,
-			this.field.textareaElement,
-			this.button.buttonElement,
-			this.field.divFieldValidation
+			this.userItem.draw(),
+			this.field.draw(),
+			this.button.draw('Отправить'),
+			this.field.drawFieldValidation() as HTMLDivElement
 		)
+
+		this.button.buttonElement.onclick = () => {
+			this.handleForm()
+		}
+
+		this.addStyles()
+
+		return this.formElement
+	}
+
+	public get getCommentsLength() {
+		return this._comments.length
+	}
+
+	private set getCommentsLength(commentsLength) {
+		this._comments.length = commentsLength
 	}
 
 	private onSubmit = (event: Event) => {
@@ -139,9 +97,10 @@ class CommentForm {
 				this._comments.push(this._commentInfo)
 				localStorage.setItem('comment', JSON.stringify(this._comments))
 
-				this.select.sortComments()
+				this.getCommentsLength = this._comments.length
 
-				this.drawAmountComments()
+				this.commentPanel.drawAmountComments(this._comments.length)
+				this.commentPanel.select.sortComments()
 			} else {
 				const spanNoInternetConnectionElement = document.createElement('span')
 
