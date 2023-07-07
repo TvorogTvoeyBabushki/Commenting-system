@@ -11,9 +11,13 @@ class Home {
 	main = new Main().draw()
 	layout = new Layout().draw(this.main)
 
+	constructor() {
+		this.draw()
+	}
+
 	public draw() {
 		this.appRoot?.append(this.layout)
 	}
 }
 
-new Home().draw()
+new Home()

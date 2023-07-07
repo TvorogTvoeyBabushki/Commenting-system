@@ -6,6 +6,9 @@ import styles from '../commentItems.module.scss'
 import { ToolBarUtils } from './toolbarUtils'
 
 class ToolBar extends ToolBarUtils {
+	commentForm = new CommentForm(null, null)
+	replyToCommentForm = this.commentForm.draw()
+
 	constructor(commentInfo: ICommentInfo) {
 		super(commentInfo)
 	}
@@ -63,30 +66,31 @@ class ToolBar extends ToolBarUtils {
 
 			index === 0
 				? buttonElementLeft.addEventListener('click', () => {
-						const replyToCommentForm = new CommentForm().formElement
-						const buttonReplyToCommentForm = replyToCommentForm.querySelector(
-							'button'
-						) as HTMLButtonElement
+						const buttonReplyToCommentForm =
+							this.replyToCommentForm.querySelector(
+								'button'
+							) as HTMLButtonElement
 						const cancelReplyToComment = new Button().draw('Отмена')
 
 						replyToCommentWrapper.style.marginTop = '50px'
 
 						replyToCommentWrapper.append(
-							replyToCommentForm,
+							this.replyToCommentForm,
 							cancelReplyToComment
 						)
+
 						commentsItem.append(replyToCommentWrapper)
 
 						buttonElementLeft.disabled = true
 
-						buttonReplyToCommentForm.onclick = e => {
-							e.preventDefault()
-							console.log(new CommentForm())
+						buttonReplyToCommentForm.onclick = () => {
+							this.replyToCommentForm.onsubmit = e =>
+								this.commentForm.onSubmit(e, 'reply', this._commentInfo)
 						}
 
 						cancelReplyToComment.onclick = () => {
-							replyToCommentWrapper.style.marginTop = '0'
 							replyToCommentWrapper.innerHTML = ''
+							replyToCommentWrapper.style.marginTop = '0'
 
 							buttonElementLeft.disabled = false
 						}

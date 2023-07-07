@@ -3,11 +3,14 @@ import moment from 'moment'
 import { ICommentInfo } from '../comment-form/commentForm'
 
 import styles from './commentItems.module.scss'
+import { RepliesToComment } from './replies-to-comment/repliesToComment'
 import Toolbar from './toolbar/toolbar'
 
 export class CommentItems {
 	commentsWrapper = document.createElement('div')
 	commentsItem: HTMLElement | undefined
+
+	repliesToComment = new RepliesToComment()
 
 	private _commentsInfo: ICommentInfo[] = []
 
@@ -108,6 +111,11 @@ export class CommentItems {
 
 			commentsItemInfo.append(commentsItemInfoWrapper, commentsItemToolbar)
 			this.commentsItem.append(commentsItemImage, commentsItemInfo)
+
+			if (commentInfo.replies) {
+				this.commentsItem.append(this.repliesToComment.draw(commentInfo))
+			}
+
 			this.commentsWrapper.append(this.commentsItem)
 		})
 

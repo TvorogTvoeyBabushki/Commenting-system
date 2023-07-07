@@ -1,10 +1,13 @@
 @import '@/assets/styles/variables';
 
-.comments_wrapper {
+.replies {
+	flex-direction: column;
+	margin-top: 30px;
+
 	> div {
 		position: relative;
 		padding-left: 91px;
-		margin-bottom: 50px;
+		margin-bottom: 30px;
 
 		> img {
 			margin-right: 30px;
@@ -15,7 +18,7 @@
 			left: 0;
 		}
 
-		> div:first-of-type {
+		> div {
 			> div:first-child {
 				> div {
 					display: flex;
@@ -124,32 +127,9 @@
 				}
 			}
 		}
+	}
 
-		> div ~ div {
-			display: flex;
-
-			> form {
-				margin-bottom: 0;
-				flex-grow: 1;
-
-				> div:last-child {
-					> p:last-child {
-						width: 154px;
-						text-align: center;
-					}
-				}
-			}
-
-			> button {
-				align-self: flex-start;
-				margin-top: 37px;
-				margin-left: 30px;
-			}
-
-			button {
-				padding: 20px 30px;
-				width: 154px;
-			}
-		}
+	> div:last-child {
+		margin-bottom: 0;
 	}
 }

@@ -7,7 +7,7 @@ import { CommentPanel } from '../comment-panel/commentPanel'
 import styles from './commentForm.module.scss'
 
 export interface ICommentInfo {
-	[k: string]: string | Date | number | boolean
+	[k: string]: string | Date | number | boolean | ICommentInfo[]
 }
 
 class CommentForm {
@@ -19,6 +19,7 @@ class CommentForm {
 
 	private _commentInfo: ICommentInfo = {}
 	private _comments: ICommentInfo[] = []
+	private _repliesToComment: ICommentInfo[] = []
 
 	field: Field
 	button = new Button()
@@ -26,16 +27,14 @@ class CommentForm {
 	isDrawSpanNoInternetConnectionElement = true
 
 	constructor(
-		commentItemsWrapper: HTMLElement | null = null,
-		commentPanel: CommentPanel
+		commentItemsWrapper: HTMLElement | null,
+		commentPanel: CommentPanel | null
 	) {
 		this.commentItemsWrapper = commentItemsWrapper as HTMLElement
-		this.commentPanel = commentPanel
+		this.commentPanel = commentPanel as CommentPanel
 
 		if (localStorage.getItem('comment')) {
-			this._comments = [
-				...JSON.parse(localStorage.getItem('comment') as string)
-			]
+			this.parseCommentsOfLocalStorage()
 		}
 
 		const fieldProps = {
@@ -75,7 +74,15 @@ class CommentForm {
 		this._comments.length = commentsLength
 	}
 
-	private onSubmit = (event: Event) => {
+	private parseCommentsOfLocalStorage() {
+		this._comments = [...JSON.parse(localStorage.getItem('comment') as string)]
+	}
+
+	public onSubmit = (
+		event: Event,
+		type: string,
+		updatedСommentInfo: ICommentInfo | null
+	) => {
 		event.preventDefault()
 
 		const eventTarget = event.target as HTMLFormElement
@@ -93,7 +100,7 @@ class CommentForm {
 				}
 			})
 
-			if (this._commentInfo.author) {
+			if (this._commentInfo.author && type === 'publication') {
 				this._comments.push(this._commentInfo)
 				localStorage.setItem('comment', JSON.stringify(this._comments))
 
@@ -101,6 +108,26 @@ class CommentForm {
 
 				this.commentPanel.drawAmountComments(this._comments.length)
 				this.commentPanel.select.sortComments()
+			} else if (this._commentInfo.author && type === 'reply') {
+				if (localStorage.getItem('comment')) {
+					this.parseCommentsOfLocalStorage()
+
+					this._comments.forEach(comment => {
+						if (comment.date === updatedСommentInfo!.date && comment.replies) {
+							this._repliesToComment = [...(comment.replies as ICommentInfo[])]
+						}
+					})
+				}
+
+				this._repliesToComment.push(this._commentInfo)
+
+				this._comments.forEach(comment => {
+					if (comment.date === updatedСommentInfo!.date) {
+						comment.replies = this._repliesToComment
+					}
+				})
+
+				localStorage.setItem('comment', JSON.stringify(this._comments))
 			} else {
 				const spanNoInternetConnectionElement = document.createElement('span')
 
@@ -123,7 +150,9 @@ class CommentForm {
 	}
 
 	private handleForm() {
-		this.formElement.addEventListener('submit', this.onSubmit)
+		this.formElement.addEventListener('submit', e =>
+			this.onSubmit(e, 'publication', null)
+		)
 	}
 }
 

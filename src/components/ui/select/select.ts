@@ -85,8 +85,10 @@ export class Select {
 			...parentElementSelectWrapper!.querySelectorAll('button')
 		]
 
-		nodeListButtons.at(0)?.classList.add(this.stylesCommentPanel.active)
-		nodeListButtons.at(-1)?.classList.remove(this.stylesFavorite.active)
+		nodeListButtons[0]?.classList.add(this.stylesCommentPanel.active)
+		nodeListButtons[nodeListButtons.length - 1].classList.remove(
+			this.stylesFavorite.active
+		)
 	}
 
 	private draw(selectOptionValues: string[], selectNameAttr: string) {
@@ -102,7 +104,7 @@ export class Select {
 			checkMarkElement.classList.add('check_mark')
 			checkMarkElement.src = '/public/check-mark.png'
 
-			if (this.previousSelect.at(-1) === optionValue) {
+			if (this.previousSelect[0] === optionValue) {
 				checkMarkElement.style.visibility = 'visible'
 			}
 
@@ -132,7 +134,7 @@ export class Select {
 				const checkMarkElements: NodeListOf<HTMLElement> =
 					document?.querySelectorAll('.check_mark')
 
-				if (this.previousSelect.at(-1) !== eventTargetElement.textContent) {
+				if (this.previousSelect[0] !== eventTargetElement.textContent) {
 					checkMarkElements?.forEach(checkMarkElement => {
 						checkMarkElement.style.visibility = 'hidden'
 					})
