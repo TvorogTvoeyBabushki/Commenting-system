@@ -1,4 +1,6 @@
-import { ICommentInfo } from '../../comment-form/commentForm'
+import { Button } from '@/components/ui/button/button'
+
+import CommentForm, { ICommentInfo } from '../../comment-form/commentForm'
 
 export class ToolBarUtils {
 	spanVoteCount: HTMLElement = document.createElement('span')
@@ -85,11 +87,43 @@ export class ToolBarUtils {
 		this.drawVoteCount()
 	}
 
-	protected addCommentToFavorite = (
+	protected replyToComment(
+		replyToCommentForm: HTMLFormElement,
+		replyToCommentWrapper: HTMLDivElement,
+		commentsItem: HTMLElement,
+		buttonElementLeft: HTMLButtonElement,
+		commentForm: CommentForm
+	) {
+		const buttonReplyToCommentForm = replyToCommentForm.querySelector(
+			'button'
+		) as HTMLButtonElement
+		const cancelReplyToComment = new Button().draw('Отмена')
+
+		replyToCommentWrapper.append(replyToCommentForm, cancelReplyToComment)
+
+		commentsItem.append(replyToCommentWrapper)
+
+		buttonElementLeft.disabled = true
+
+		buttonReplyToCommentForm.onclick = () => {
+			replyToCommentForm.onsubmit = e =>
+				commentForm.onSubmit(e, 'reply', this._commentInfo)
+		}
+
+		cancelReplyToComment.onclick = () => {
+			replyToCommentWrapper.innerHTML = ''
+
+			commentsItem?.removeChild(replyToCommentWrapper)
+
+			buttonElementLeft.disabled = false
+		}
+	}
+
+	protected addCommentToFavorite(
 		styles: CSSModuleClasses,
 		fillHeartIconElement: HTMLImageElement,
 		favoriteSpanElement: HTMLSpanElement
-	) => {
+	) {
 		fillHeartIconElement.classList.toggle(styles.active)
 
 		if (this._isChangeTextFavoriteSpanElement) {
@@ -118,7 +152,6 @@ export class ToolBarUtils {
 			this.checkingLocalStorageKey()
 
 			this._isRemoveFavorites = true
-			this._commentInfo.isRemoveFavorites = this._isRemoveFavorites
 
 			this._favorites.push({
 				...this._commentInfo,

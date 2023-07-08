@@ -1,71 +1,44 @@
-import moment from 'moment'
-
 import { ICommentInfo } from '../../comment-form/commentForm'
-import ToolBar from '../toolbar/toolbar'
-
-import styles from './repliesToComment.module.scss'
+import { CommentItems } from '../commentItems'
+import styles from '../commentItems.module.scss'
 
 export class RepliesToComment {
 	repliesToCommentWrapper: HTMLElement | undefined
 	private _commentsInfoOfRepliesToComment: ICommentInfo[] = []
 
 	private addStyle() {
-		this.repliesToCommentWrapper?.classList.add(styles.replies)
+		const nameStyles = [styles.comments_wrapper, styles.replies]
+		this.repliesToCommentWrapper?.classList.add(...nameStyles)
 	}
 
-	public draw(commentInfo: ICommentInfo) {
+	public draw(commentInfoOfPostedComment: ICommentInfo) {
 		this.repliesToCommentWrapper = document.createElement('div')
 
 		this._commentsInfoOfRepliesToComment = [
-			...(commentInfo.replies as ICommentInfo[])
+			...(commentInfoOfPostedComment.replies as ICommentInfo[])
 		]
 
 		this._commentsInfoOfRepliesToComment.forEach(
 			commentInfoOfRepliesToComment => {
-				const commentsItem = document.createElement('div')
+				const commentItem = document.createElement('div')
+				const commentItems = new CommentItems()
 
-				const commentsItemImage = document.createElement('img')
-				const commentsItemInfo = document.createElement('div')
+				commentItems.addElementsToCommentItem(
+					commentInfoOfRepliesToComment,
+					commentItem,
+					false,
+					'replies',
+					commentInfoOfPostedComment.author as string
+				)
 
-				const imageProps = [
-					['src', `${commentInfoOfRepliesToComment?.image}`],
-					['alt', 'user']
-				]
+				const replyButtonOfToolbar = commentItem.querySelector(
+					'button'
+				) as HTMLButtonElement
+				const parentReplyButtonOfToolbar = replyButtonOfToolbar.parentNode
 
-				for (const [attr, val] of imageProps) {
-					commentsItemImage.setAttribute(attr, val)
-				}
+				parentReplyButtonOfToolbar?.removeChild(replyButtonOfToolbar)
 
-				const commentsItemInfoWrapper = document.createElement('div')
-				const commentsItemInfoNameAndDate = document.createElement('div')
-				const commentsItemToolbar = new ToolBar(
-					commentInfo as ICommentInfo
-				).draw(commentsItem)
-
-				for (const elem in commentInfoOfRepliesToComment) {
-					const paragraphElement = document.createElement('p')
-
-					if (elem === 'author' || elem === 'date') {
-						elem === 'author'
-							? (paragraphElement.innerText = `${commentInfoOfRepliesToComment[elem]}`)
-							: (paragraphElement.innerText = `${moment(
-									commentInfoOfRepliesToComment[elem] as number
-							  ).format('DD.MM HH:mm')}`)
-
-						commentsItemInfoNameAndDate.append(paragraphElement)
-						commentsItemInfoWrapper.append(commentsItemInfoNameAndDate)
-					}
-
-					if (elem === 'comment') {
-						paragraphElement.innerText = `${commentInfoOfRepliesToComment[elem]}`
-
-						commentsItemInfoWrapper.append(paragraphElement)
-					}
-				}
-
-				commentsItemInfo.append(commentsItemInfoWrapper, commentsItemToolbar)
-				commentsItem.append(commentsItemImage, commentsItemInfo)
-				this.repliesToCommentWrapper?.append(commentsItem)
+				this.repliesToCommentWrapper?.append(commentItem)
 			}
 		)
 

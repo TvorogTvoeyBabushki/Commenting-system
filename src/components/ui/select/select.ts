@@ -11,8 +11,9 @@ export class Select {
 	stylesCommentPanel: CSSModuleClasses
 	stylesFavorite: CSSModuleClasses
 
-	previousSelect: string[] = ['По актуальности']
-	optionValue: string = ''
+	private _previousSelect: string[] = ['По актуальности']
+	private _optionValue = ''
+	private _isReverseSort = false
 
 	constructor(
 		selectNameAttr: string,
@@ -65,16 +66,19 @@ export class Select {
 	}
 
 	public get getOptionValue() {
-		return this.optionValue
+		return this._optionValue
 	}
 
 	private set getOptionValue(optionValue) {
-		this.optionValue = optionValue
+		this._optionValue = optionValue
 	}
 
 	public sortComments() {
 		this.commentItemsWrapper.innerHTML = ''
-		const commentItems = new CommentItems().sortComments(this.getOptionValue)
+		const commentItems = new CommentItems().sortComments(
+			this.getOptionValue,
+			this._isReverseSort
+		)
 
 		commentItems?.forEach(commentItem => {
 			this.commentItemsWrapper.append(commentItem)
@@ -89,6 +93,10 @@ export class Select {
 		nodeListButtons[nodeListButtons.length - 1].classList.remove(
 			this.stylesFavorite.active
 		)
+
+		this._isReverseSort
+			? (this._isReverseSort = false)
+			: (this._isReverseSort = true)
 	}
 
 	private draw(selectOptionValues: string[], selectNameAttr: string) {
@@ -104,7 +112,7 @@ export class Select {
 			checkMarkElement.classList.add('check_mark')
 			checkMarkElement.src = '/public/check-mark.png'
 
-			if (this.previousSelect[0] === optionValue) {
+			if (this._previousSelect[0] === optionValue) {
 				checkMarkElement.style.visibility = 'visible'
 			}
 
@@ -134,15 +142,15 @@ export class Select {
 				const checkMarkElements: NodeListOf<HTMLElement> =
 					document?.querySelectorAll('.check_mark')
 
-				if (this.previousSelect[0] !== eventTargetElement.textContent) {
+				if (this._previousSelect[0] !== eventTargetElement.textContent) {
 					checkMarkElements?.forEach(checkMarkElement => {
 						checkMarkElement.style.visibility = 'hidden'
 					})
 
 					checkMarkElement.style.visibility = 'visible'
 
-					this.previousSelect.pop()
-					this.previousSelect.push(eventTargetElement.textContent as string)
+					this._previousSelect.pop()
+					this._previousSelect.push(eventTargetElement.textContent as string)
 				}
 			})
 

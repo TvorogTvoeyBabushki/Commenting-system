@@ -1,5 +1,3 @@
-import { Button } from '@/components/ui/button/button'
-
 import CommentForm, { ICommentInfo } from '../../comment-form/commentForm'
 import styles from '../commentItems.module.scss'
 
@@ -66,34 +64,13 @@ class ToolBar extends ToolBarUtils {
 
 			index === 0
 				? buttonElementLeft.addEventListener('click', () => {
-						const buttonReplyToCommentForm =
-							this.replyToCommentForm.querySelector(
-								'button'
-							) as HTMLButtonElement
-						const cancelReplyToComment = new Button().draw('Отмена')
-
-						replyToCommentWrapper.style.marginTop = '50px'
-
-						replyToCommentWrapper.append(
+						this.replyToComment(
 							this.replyToCommentForm,
-							cancelReplyToComment
+							replyToCommentWrapper,
+							commentsItem,
+							buttonElementLeft,
+							this.commentForm
 						)
-
-						commentsItem.append(replyToCommentWrapper)
-
-						buttonElementLeft.disabled = true
-
-						buttonReplyToCommentForm.onclick = () => {
-							this.replyToCommentForm.onsubmit = e =>
-								this.commentForm.onSubmit(e, 'reply', this._commentInfo)
-						}
-
-						cancelReplyToComment.onclick = () => {
-							replyToCommentWrapper.innerHTML = ''
-							replyToCommentWrapper.style.marginTop = '0'
-
-							buttonElementLeft.disabled = false
-						}
 				  })
 				: buttonElementLeft.addEventListener('click', () =>
 						this.addCommentToFavorite(

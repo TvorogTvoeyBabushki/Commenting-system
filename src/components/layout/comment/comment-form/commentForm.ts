@@ -96,7 +96,8 @@ class CommentForm {
 					image: userInfo.picture.large,
 					date: new Date(),
 					comment: textareaToForm.value.trim(),
-					voteCount: Math.round(Math.random() * 200 - 100)
+					voteCount: Math.round(Math.random() * 200 - 100),
+					replies: []
 				}
 			})
 
