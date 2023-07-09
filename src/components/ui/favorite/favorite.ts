@@ -20,7 +20,7 @@ export class Favorite {
 	) {
 		favoriteButtonElement.onclick = () => {
 			commentItemsWrapper.innerHTML = ''
-			const commentItems = new CommentItems().sortComments('Избранное')
+			const commentItems = new CommentItems().sortComments('Избранное', false)
 
 			commentItems?.forEach(commentItem => {
 				commentItemsWrapper.append(commentItem)

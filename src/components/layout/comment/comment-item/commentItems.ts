@@ -67,9 +67,6 @@ export class CommentItems {
 			if (isReverseSort) this._commentsInfo.reverse()
 		}
 
-		// один общий флаг на все сортировки(нужно сделать для каждого свой)
-		//  при клике на другую сортировку сбрасывать флаг предыдущего
-
 		if (optionValue === 'Избранное') {
 			this._commentsInfo = [
 				...JSON.parse(localStorage.getItem('favorites') as string)

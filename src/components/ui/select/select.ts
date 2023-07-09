@@ -1,6 +1,10 @@
 import styles from './select.module.scss'
 import { CommentItems } from '@/components/layout/comment/comment-item/commentItems'
 
+interface IInfoOfSelectedSortItem {
+	[key: string]: string | boolean
+}
+
 export class Select {
 	selectWrapper = document.createElement('div')
 	nameSelectedElement = document.createElement('button')
@@ -13,7 +17,7 @@ export class Select {
 
 	private _previousSelect: string[] = ['По актуальности']
 	private _optionValue = ''
-	private _isReverseSort = false
+	private _infoOfSelectedSortItems: IInfoOfSelectedSortItem[] = []
 
 	constructor(
 		selectNameAttr: string,
@@ -73,11 +77,11 @@ export class Select {
 		this._optionValue = optionValue
 	}
 
-	public sortComments() {
+	public sortComments(isReverseSort: boolean) {
 		this.commentItemsWrapper.innerHTML = ''
 		const commentItems = new CommentItems().sortComments(
 			this.getOptionValue,
-			this._isReverseSort
+			isReverseSort as boolean
 		)
 
 		commentItems?.forEach(commentItem => {
@@ -93,10 +97,6 @@ export class Select {
 		nodeListButtons[nodeListButtons.length - 1].classList.remove(
 			this.stylesFavorite.active
 		)
-
-		this._isReverseSort
-			? (this._isReverseSort = false)
-			: (this._isReverseSort = true)
 	}
 
 	private draw(selectOptionValues: string[], selectNameAttr: string) {
@@ -129,12 +129,41 @@ export class Select {
 			linkElement.innerText = optionValue
 			linkElement.insertAdjacentElement('afterbegin', checkMarkElement)
 
+			let isPushInfoOfSelectedSortItem = true
+
 			linkElement.addEventListener('click', event => {
 				event.preventDefault()
 
 				this.getOptionValue = optionValue
 
-				this.sortComments()
+				const infoOfSelectedSortItem = {
+					optionValue,
+					isReverseSort: false
+				}
+
+				if (isPushInfoOfSelectedSortItem) {
+					this._infoOfSelectedSortItems.push(infoOfSelectedSortItem)
+
+					this._infoOfSelectedSortItems.forEach(item => {
+						item.optionValue === infoOfSelectedSortItem.optionValue
+							? this.sortComments(item.isReverseSort as boolean)
+							: (item.isReverseSort = true)
+					})
+
+					isPushInfoOfSelectedSortItem = false
+				} else {
+					this._infoOfSelectedSortItems.forEach(item => {
+						if (item.optionValue === infoOfSelectedSortItem.optionValue) {
+							item.isReverseSort
+								? (item.isReverseSort = false)
+								: (item.isReverseSort = true)
+
+							this.sortComments(item.isReverseSort)
+						} else {
+							item.isReverseSort = true
+						}
+					})
+				}
 
 				const eventTargetElement = event.target as HTMLElement
 				spanNameSelected.innerText = `${eventTargetElement.textContent}`

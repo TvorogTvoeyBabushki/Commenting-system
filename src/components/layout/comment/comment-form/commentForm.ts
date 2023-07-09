@@ -108,7 +108,7 @@ class CommentForm {
 				this.getCommentsLength = this._comments.length
 
 				this.commentPanel.drawAmountComments(this._comments.length)
-				this.commentPanel.select.sortComments()
+				this.commentPanel.select.sortComments(false)
 			} else if (this._commentInfo.author && type === 'reply') {
 				if (localStorage.getItem('comment')) {
 					this.parseCommentsOfLocalStorage()

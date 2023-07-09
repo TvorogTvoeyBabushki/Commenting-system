@@ -1,8 +1,6 @@
 import { Favorite } from '@/components/ui/favorite/favorite'
 import { Select } from '@/components/ui/select/select'
 
-import CommentForm from '../comment-form/commentForm'
-
 import styles from './commentPanel.module.scss'
 
 export class CommentPanel {
@@ -53,7 +51,7 @@ export class CommentPanel {
 			if (this.favorite._isShowAllComments) {
 				this.commentItemsWrapper.innerHTML = ''
 
-				this.select.sortComments()
+				this.select.sortComments(false)
 				this.changeStyles()
 
 				this.favorite._isShowAllComments = false
