@@ -1,3 +1,5 @@
+import { Select } from '../select/select'
+
 import styles from './favorite.module.scss'
 import { CommentItems } from '@/components/layout/comment/comment-item/commentItems'
 
@@ -16,20 +18,21 @@ export class Favorite {
 		favoriteButtonElement: HTMLButtonElement,
 		commentItemsWrapper: HTMLElement,
 		commentPanelAmountComments: HTMLButtonElement,
-		stylesCommentForm: CSSModuleClasses
+		stylesCommentForm: CSSModuleClasses,
+		select: Select
 	) {
 		favoriteButtonElement.onclick = () => {
+			favoriteButtonElement.classList.add(styles.active)
+			commentPanelAmountComments.classList.remove(stylesCommentForm.active)
+
+			this._isShowAllComments = true
+
 			commentItemsWrapper.innerHTML = ''
-			const commentItems = new CommentItems().sortComments('Избранное', false)
+			const commentItems = new CommentItems().sortComments('Избранное', select)
 
 			commentItems?.forEach(commentItem => {
 				commentItemsWrapper.append(commentItem)
 			})
-
-			favoriteButtonElement.classList.add(styles.active)
-
-			commentPanelAmountComments.classList.remove(stylesCommentForm.active)
-			this._isShowAllComments = true
 		}
 	}
 
@@ -37,7 +40,8 @@ export class Favorite {
 		children: string,
 		commentItemsWrapper: HTMLElement,
 		commentPanelAmountComments: HTMLButtonElement,
-		stylesCommentForm: CSSModuleClasses
+		stylesCommentForm: CSSModuleClasses,
+		select: Select
 	) {
 		const favoriteButtonElement = document.createElement('button')
 		const favoriteButtonText = document.createElement('span')
@@ -60,7 +64,8 @@ export class Favorite {
 			favoriteButtonElement,
 			commentItemsWrapper,
 			commentPanelAmountComments,
-			stylesCommentForm
+			stylesCommentForm,
+			select
 		)
 
 		return favoriteButtonElement

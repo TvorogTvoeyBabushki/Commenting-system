@@ -17,9 +17,11 @@ export class CommentPanel {
 
 		const selectOptionValues = [
 			'По дате',
-			'По количеству оценок',
+			'По количеству оценок (по убыв.)',
+			'По количеству оценок (по возр.)',
 			'По актуальности',
-			'По количеству ответов'
+			'По количеству ответов (по убыв.)',
+			'По количеству ответов (по возр.)'
 		]
 
 		this.favorite = new Favorite()
@@ -32,12 +34,12 @@ export class CommentPanel {
 		)
 	}
 
-	public addStyles() {
+	private addStyles() {
 		this.commentPanel.classList.add(styles.comment_panel)
 		this.commentPanelAmountComments.classList.add(styles.active)
 	}
 
-	public changeStyles() {
+	private changeStyles() {
 		const nodeListButtons = [...this.commentPanel.querySelectorAll('button')]
 		nodeListButtons.at(-1)?.classList.remove(this.favorite.getStyle().active)
 
@@ -49,9 +51,7 @@ export class CommentPanel {
 
 		this.commentPanelAmountComments.onclick = () => {
 			if (this.favorite._isShowAllComments) {
-				this.commentItemsWrapper.innerHTML = ''
-
-				this.select.sortComments(false)
+				this.select.sortComments()
 				this.changeStyles()
 
 				this.favorite._isShowAllComments = false
@@ -69,7 +69,8 @@ export class CommentPanel {
 				'Избранное',
 				this.commentItemsWrapper,
 				this.commentPanelAmountComments,
-				styles
+				styles,
+				this.select
 			)
 		)
 

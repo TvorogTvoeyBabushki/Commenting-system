@@ -1,14 +1,13 @@
-import CommentForm, { ICommentInfo } from '../../comment-form/commentForm'
+import { Select } from '@/components/ui/select/select'
+
+import { ICommentInfo } from '../../comment-form/commentForm'
 import styles from '../commentItems.module.scss'
 
 import { ToolBarUtils } from './toolbarUtils'
 
 class ToolBar extends ToolBarUtils {
-	commentForm = new CommentForm(null, null)
-	replyToCommentForm = this.commentForm.draw()
-
-	constructor(commentInfo: ICommentInfo) {
-		super(commentInfo)
+	constructor(commentInfo: ICommentInfo, select: Select) {
+		super(commentInfo, select)
 	}
 
 	public draw(commentsItem: HTMLElement) {
@@ -65,11 +64,9 @@ class ToolBar extends ToolBarUtils {
 			index === 0
 				? buttonElementLeft.addEventListener('click', () => {
 						this.replyToComment(
-							this.replyToCommentForm,
 							replyToCommentWrapper,
 							commentsItem,
-							buttonElementLeft,
-							this.commentForm
+							buttonElementLeft
 						)
 				  })
 				: buttonElementLeft.addEventListener('click', () =>

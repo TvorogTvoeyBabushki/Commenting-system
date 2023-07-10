@@ -1,10 +1,6 @@
 import styles from './select.module.scss'
 import { CommentItems } from '@/components/layout/comment/comment-item/commentItems'
 
-interface IInfoOfSelectedSortItem {
-	[key: string]: string | boolean
-}
-
 export class Select {
 	selectWrapper = document.createElement('div')
 	nameSelectedElement = document.createElement('button')
@@ -17,7 +13,6 @@ export class Select {
 
 	private _previousSelect: string[] = ['По актуальности']
 	private _optionValue = ''
-	private _infoOfSelectedSortItems: IInfoOfSelectedSortItem[] = []
 
 	constructor(
 		selectNameAttr: string,
@@ -77,11 +72,11 @@ export class Select {
 		this._optionValue = optionValue
 	}
 
-	public sortComments(isReverseSort: boolean) {
+	public sortComments() {
 		this.commentItemsWrapper.innerHTML = ''
 		const commentItems = new CommentItems().sortComments(
 			this.getOptionValue,
-			isReverseSort as boolean
+			this
 		)
 
 		commentItems?.forEach(commentItem => {
@@ -89,14 +84,17 @@ export class Select {
 		})
 
 		const parentElementSelectWrapper = this.selectWrapper.parentElement
-		const nodeListButtons = [
-			...parentElementSelectWrapper!.querySelectorAll('button')
-		]
 
-		nodeListButtons[0]?.classList.add(this.stylesCommentPanel.active)
-		nodeListButtons[nodeListButtons.length - 1].classList.remove(
-			this.stylesFavorite.active
-		)
+		if (parentElementSelectWrapper) {
+			const nodeListButtons = [
+				...parentElementSelectWrapper!.querySelectorAll('button')
+			]
+
+			nodeListButtons[0]?.classList.add(this.stylesCommentPanel.active)
+			nodeListButtons[nodeListButtons.length - 1].classList.remove(
+				this.stylesFavorite.active
+			)
+		}
 	}
 
 	private draw(selectOptionValues: string[], selectNameAttr: string) {
@@ -129,41 +127,12 @@ export class Select {
 			linkElement.innerText = optionValue
 			linkElement.insertAdjacentElement('afterbegin', checkMarkElement)
 
-			let isPushInfoOfSelectedSortItem = true
-
 			linkElement.addEventListener('click', event => {
 				event.preventDefault()
 
 				this.getOptionValue = optionValue
 
-				const infoOfSelectedSortItem = {
-					optionValue,
-					isReverseSort: false
-				}
-
-				if (isPushInfoOfSelectedSortItem) {
-					this._infoOfSelectedSortItems.push(infoOfSelectedSortItem)
-
-					this._infoOfSelectedSortItems.forEach(item => {
-						item.optionValue === infoOfSelectedSortItem.optionValue
-							? this.sortComments(item.isReverseSort as boolean)
-							: (item.isReverseSort = true)
-					})
-
-					isPushInfoOfSelectedSortItem = false
-				} else {
-					this._infoOfSelectedSortItems.forEach(item => {
-						if (item.optionValue === infoOfSelectedSortItem.optionValue) {
-							item.isReverseSort
-								? (item.isReverseSort = false)
-								: (item.isReverseSort = true)
-
-							this.sortComments(item.isReverseSort)
-						} else {
-							item.isReverseSort = true
-						}
-					})
-				}
+				this.sortComments()
 
 				const eventTargetElement = event.target as HTMLElement
 				spanNameSelected.innerText = `${eventTargetElement.textContent}`

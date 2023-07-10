@@ -14,8 +14,8 @@ class CommentForm {
 	formElement = document.createElement('form')
 
 	userItem = new UserItem()
-	commentItemsWrapper: HTMLElement
 	commentPanel: CommentPanel
+	commentItemsWrapper: HTMLElement
 
 	private _commentInfo: ICommentInfo = {}
 	private _comments: ICommentInfo[] = []
@@ -27,11 +27,11 @@ class CommentForm {
 	isDrawSpanNoInternetConnectionElement = true
 
 	constructor(
-		commentItemsWrapper: HTMLElement | null,
-		commentPanel: CommentPanel | null
+		commentPanel: CommentPanel | null,
+		commentItemsWrapper: HTMLElement | null
 	) {
-		this.commentItemsWrapper = commentItemsWrapper as HTMLElement
-		this.commentPanel = commentPanel as CommentPanel
+		this.commentPanel = commentPanel!
+		this.commentItemsWrapper = commentItemsWrapper!
 
 		if (localStorage.getItem('comment')) {
 			this.parseCommentsOfLocalStorage()
@@ -108,7 +108,7 @@ class CommentForm {
 				this.getCommentsLength = this._comments.length
 
 				this.commentPanel.drawAmountComments(this._comments.length)
-				this.commentPanel.select.sortComments(false)
+				this.commentPanel.select.sortComments()
 			} else if (this._commentInfo.author && type === 'reply') {
 				if (localStorage.getItem('comment')) {
 					this.parseCommentsOfLocalStorage()
@@ -131,16 +131,13 @@ class CommentForm {
 				localStorage.setItem('comment', JSON.stringify(this._comments))
 			} else {
 				const spanNoInternetConnectionElement = document.createElement('span')
-
 				spanNoInternetConnectionElement.classList.add('no_internet_connection')
 				spanNoInternetConnectionElement.innerText = 'No internet connection'
-
 				if (this.isDrawSpanNoInternetConnectionElement) {
 					this.commentItemsWrapper.insertAdjacentElement(
 						'afterbegin',
 						spanNoInternetConnectionElement
 					)
-
 					this.isDrawSpanNoInternetConnectionElement = false
 				}
 			}

@@ -1,9 +1,14 @@
 import { Button } from '@/components/ui/button/button'
+import { Select } from '@/components/ui/select/select'
 
 import CommentForm, { ICommentInfo } from '../../comment-form/commentForm'
 
 export class ToolBarUtils {
 	spanVoteCount: HTMLElement = document.createElement('span')
+
+	commentForm: CommentForm
+	replyToCommentForm: HTMLFormElement
+	select: Select
 
 	private _favorites: ICommentInfo[] = []
 	protected _commentInfo: ICommentInfo
@@ -15,9 +20,13 @@ export class ToolBarUtils {
 	protected _isChangeTextFavoriteSpanElement = false
 	private _isRemoveFavorites = false
 
-	constructor(commentInfo: ICommentInfo) {
+	constructor(commentInfo: ICommentInfo, select: Select) {
 		this._commentInfo = commentInfo
 		this._voteCount = commentInfo.voteCount as number
+
+		this.commentForm = new CommentForm(null, null)
+		this.replyToCommentForm = this.commentForm.draw()
+		this.select = select
 
 		this.checkingLocalStorageKey()
 
@@ -88,29 +97,31 @@ export class ToolBarUtils {
 	}
 
 	protected replyToComment(
-		replyToCommentForm: HTMLFormElement,
 		replyToCommentWrapper: HTMLDivElement,
 		commentsItem: HTMLElement,
-		buttonElementLeft: HTMLButtonElement,
-		commentForm: CommentForm
+		buttonElementLeft: HTMLButtonElement
 	) {
-		const buttonReplyToCommentForm = replyToCommentForm.querySelector(
+		const buttonReplyToCommentForm = this.replyToCommentForm.querySelector(
 			'button'
 		) as HTMLButtonElement
 		const cancelReplyToComment = new Button().draw('Отмена')
 
-		replyToCommentWrapper.append(replyToCommentForm, cancelReplyToComment)
+		replyToCommentWrapper.append(this.replyToCommentForm, cancelReplyToComment)
 
 		commentsItem.append(replyToCommentWrapper)
 
 		buttonElementLeft.disabled = true
 
 		buttonReplyToCommentForm.onclick = () => {
-			replyToCommentForm.onsubmit = e =>
-				commentForm.onSubmit(e, 'reply', this._commentInfo)
+			this.replyToCommentForm.onsubmit = e => {
+				this.commentForm.onSubmit(e, 'reply', this._commentInfo)
+				this.select.sortComments()
+			}
 		}
 
 		cancelReplyToComment.onclick = () => {
+			const field = this.replyToCommentForm.querySelector('textarea')
+			field!.value = ''
 			replyToCommentWrapper.innerHTML = ''
 
 			commentsItem?.removeChild(replyToCommentWrapper)

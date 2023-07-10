@@ -1,5 +1,7 @@
 import moment from 'moment'
 
+import { Select } from '@/components/ui/select/select'
+
 import { ICommentInfo } from '../comment-form/commentForm'
 
 import styles from './commentItems.module.scss'
@@ -17,7 +19,11 @@ export class CommentItems {
 		if (localStorage.getItem('comment')) {
 			this._commentsInfo = [
 				...JSON.parse(localStorage.getItem('comment') as string)
-			].reverse()
+			].sort(
+				(a, b) =>
+					new Date(b.date as number).valueOf() -
+					new Date(a.date as number).valueOf()
+			)
 		}
 	}
 
@@ -25,46 +31,54 @@ export class CommentItems {
 		this.commentsWrapper.classList.add(styles.comments_wrapper)
 	}
 
-	public sortComments(optionValue: string, isReverseSort: boolean) {
-		if (optionValue === 'По количеству оценок') {
-			this._commentsInfo
-				?.sort((a, b) => (a.voteCount as number) - (b.voteCount as number))
-				.reverse()
-
-			if (isReverseSort) this._commentsInfo.reverse()
+	public sortComments(optionValue: string, select: Select) {
+		if (
+			optionValue === 'По количеству оценок (по убыв.)' ||
+			optionValue === 'По количеству оценок (по возр.)'
+		) {
+			this._commentsInfo?.sort((a, b) => {
+				if (optionValue === 'По количеству оценок (по убыв.)') {
+					return (b.voteCount as number) - (a.voteCount as number)
+				} else {
+					return (a.voteCount as number) - (b.voteCount as number)
+				}
+			})
 		}
 
 		if (optionValue === 'По актуальности') {
 			this._commentsInfo?.sort(
-				(a, b) => (a.date as number) - (b.date as number)
+				(a, b) =>
+					new Date(b.date as number).valueOf() -
+					new Date(a.date as number).valueOf()
 			)
-
-			if (isReverseSort) this._commentsInfo.reverse()
 		}
 
 		if (optionValue === 'По дате') {
-			this._commentsInfo
-				?.sort((a, b) => (a.date as number) - (b.date as number))
-				.reverse()
-
-			if (isReverseSort) this._commentsInfo.reverse()
+			this._commentsInfo?.sort(
+				(a, b) =>
+					new Date(a.date as number).valueOf() -
+					new Date(b.date as number).valueOf()
+			)
 		}
 
-		if (optionValue === 'По количеству ответов') {
+		if (
+			optionValue === 'По количеству ответов (по убыв.)' ||
+			optionValue === 'По количеству ответов (по возр.)'
+		) {
 			this._commentsInfo = [
 				...this._commentsInfo.filter(commentInfo => commentInfo.replies)
 			]
 
-			this._commentsInfo
-				?.sort((a, b) => {
-					const previousCommentInfo = a.replies as ICommentInfo[]
-					const nextCommentInfo = b.replies as ICommentInfo[]
+			this._commentsInfo?.sort((a, b) => {
+				const previousCommentInfo = a.replies as ICommentInfo[]
+				const nextCommentInfo = b.replies as ICommentInfo[]
 
+				if (optionValue === 'По количеству ответов (по убыв.)') {
+					return nextCommentInfo.length - previousCommentInfo.length
+				} else {
 					return previousCommentInfo.length - nextCommentInfo.length
-				})
-				.reverse()
-
-			if (isReverseSort) this._commentsInfo.reverse()
+				}
+			})
 		}
 
 		if (optionValue === 'Избранное') {
@@ -73,7 +87,7 @@ export class CommentItems {
 			]
 		}
 
-		this.draw()
+		this.draw(select)
 
 		const commentItems = this.commentsWrapper.querySelectorAll('.comment_item')
 
@@ -85,15 +99,17 @@ export class CommentItems {
 		commentItem: HTMLElement,
 		isAddClass: boolean,
 		type: string,
-		authorPostedComment: string
+		authorPostedComment: string,
+		select: Select
 	) {
 		if (isAddClass) commentItem.classList.add('comment_item')
 
 		const commentsItemImage = document.createElement('img')
 		const commentsItemInfo = document.createElement('div')
-		const commentsItemToolbar = new Toolbar(commentInfo as ICommentInfo).draw(
-			commentItem
-		)
+		const commentsItemToolbar = new Toolbar(
+			commentInfo as ICommentInfo,
+			select
+		).draw(commentItem)
 
 		const imageProps = [
 			['src', `${commentInfo?.image}`],
@@ -148,14 +164,21 @@ export class CommentItems {
 		commentItem.append(commentsItemImage, commentsItemInfo)
 	}
 
-	public draw() {
+	public draw(select: Select) {
 		this._commentsInfo?.forEach(commentInfo => {
 			const commentItem = document.createElement('div')
 
-			this.addElementsToCommentItem(commentInfo, commentItem, true, '', '')
+			this.addElementsToCommentItem(
+				commentInfo,
+				commentItem,
+				true,
+				'',
+				'',
+				select
+			)
 
 			if (commentInfo.replies) {
-				commentItem.append(this.repliesToComment.draw(commentInfo))
+				commentItem.append(this.repliesToComment.draw(commentInfo, select))
 			}
 
 			this.commentsWrapper.append(commentItem)

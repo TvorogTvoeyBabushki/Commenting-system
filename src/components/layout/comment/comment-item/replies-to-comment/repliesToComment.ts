@@ -1,3 +1,5 @@
+import { Select } from '@/components/ui/select/select'
+
 import { ICommentInfo } from '../../comment-form/commentForm'
 import { CommentItems } from '../commentItems'
 import styles from '../commentItems.module.scss'
@@ -11,7 +13,7 @@ export class RepliesToComment {
 		this.repliesToCommentWrapper?.classList.add(...nameStyles)
 	}
 
-	public draw(commentInfoOfPostedComment: ICommentInfo) {
+	public draw(commentInfoOfPostedComment: ICommentInfo, select: Select) {
 		this.repliesToCommentWrapper = document.createElement('div')
 
 		this._commentsInfoOfRepliesToComment = [
@@ -28,7 +30,8 @@ export class RepliesToComment {
 					commentItem,
 					false,
 					'replies',
-					commentInfoOfPostedComment.author as string
+					commentInfoOfPostedComment.author as string,
+					select
 				)
 
 				const replyButtonOfToolbar = commentItem.querySelector(

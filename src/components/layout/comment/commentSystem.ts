@@ -8,8 +8,8 @@ class CommentSystem {
 	commentItems = new CommentItems()
 	commentPanel = new CommentPanel(this.commentItems.commentsWrapper)
 	commentForm = new CommentForm(
-		this.commentItems.commentsWrapper,
-		this.commentPanel
+		this.commentPanel,
+		this.commentItems.commentsWrapper
 	)
 
 	private addStyle() {
@@ -20,7 +20,7 @@ class CommentSystem {
 		this.commentSection.append(
 			this.commentPanel.drawCommentPanel(this.commentForm.getCommentsLength),
 			this.commentForm.draw(),
-			this.commentItems.draw()
+			this.commentItems.draw(this.commentPanel.select)
 		)
 
 		this.addStyle()
