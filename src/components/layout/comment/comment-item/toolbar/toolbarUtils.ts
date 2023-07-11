@@ -11,6 +11,7 @@ export class ToolBarUtils {
 	select: Select
 
 	private _favorites: ICommentInfo[] = []
+	private _commentsItemInfo: ICommentInfo[] = []
 	protected _commentInfo: ICommentInfo
 
 	private _voteCount: number
@@ -28,7 +29,8 @@ export class ToolBarUtils {
 		this.replyToCommentForm = this.commentForm.draw()
 		this.select = select
 
-		this.checkingLocalStorageKey()
+		this.checkingLocalStorageKey('favorites')
+		this.checkingLocalStorageKey('comments')
 
 		this._favorites.forEach(commentInfoOfFavorites => {
 			if (commentInfoOfFavorites.date === this._commentInfo.date) {
@@ -38,11 +40,15 @@ export class ToolBarUtils {
 		})
 	}
 
-	protected checkingLocalStorageKey() {
-		if (localStorage.getItem('favorites')) {
-			this._favorites = [
-				...JSON.parse(localStorage.getItem('favorites') as string)
+	protected checkingLocalStorageKey(type: string) {
+		if (localStorage.getItem(type)) {
+			const parseLocalStorage = [
+				...JSON.parse(localStorage.getItem(type) as string)
 			]
+
+			type === 'favorites'
+				? (this._favorites = parseLocalStorage)
+				: (this._commentsItemInfo = parseLocalStorage)
 		}
 	}
 
@@ -56,6 +62,39 @@ export class ToolBarUtils {
 		this.spanVoteCount.innerText = `${this._voteCount}`
 
 		return this.spanVoteCount
+	}
+
+	private conditionsForChangVoteCount(commentItemInfo: ICommentInfo) {
+		const commentsInfoOfRepliesToComment =
+			commentItemInfo.replies as ICommentInfo[]
+
+		commentsInfoOfRepliesToComment.forEach(commentInfoOfRepliesToComment => {
+			if (commentInfoOfRepliesToComment.date === this._commentInfo.date) {
+				commentInfoOfRepliesToComment.voteCount = this._voteCount
+				this._commentInfo.voteCount = this._voteCount
+			}
+		})
+
+		if (commentItemInfo.date === this._commentInfo.date) {
+			commentItemInfo.voteCount = this._voteCount
+			this._commentInfo.voteCount = this._voteCount
+		}
+	}
+
+	private onunload() {
+		this.checkingLocalStorageKey('comments')
+		this.checkingLocalStorageKey('favorites')
+
+		this._commentsItemInfo.forEach(commentItemInfo => {
+			this.conditionsForChangVoteCount(commentItemInfo)
+		})
+
+		this._favorites.forEach(commentItemInfoOfFavorites => {
+			this.conditionsForChangVoteCount(commentItemInfoOfFavorites)
+		})
+
+		localStorage.setItem('comments', JSON.stringify(this._commentsItemInfo))
+		localStorage.setItem('favorites', JSON.stringify(this._favorites))
 	}
 
 	protected decrement = (event: MouseEvent) => {
@@ -75,6 +114,7 @@ export class ToolBarUtils {
 		buttonElement.disabled = false
 
 		this.drawVoteCount()
+		this.onunload()
 	}
 
 	protected increment = (event: MouseEvent) => {
@@ -94,6 +134,7 @@ export class ToolBarUtils {
 		buttonElement.disabled = false
 
 		this.drawVoteCount()
+		this.onunload()
 	}
 
 	protected replyToComment(
@@ -148,19 +189,30 @@ export class ToolBarUtils {
 		}
 
 		if (this._isRemoveFavorites || this._commentInfo.isRemoveFavorites) {
-			this.checkingLocalStorageKey()
+			this.checkingLocalStorageKey('favorites')
 
 			const updatedFavorites = this._favorites.filter(
 				commentInfoOfFavorites =>
 					commentInfoOfFavorites.date !== this._commentInfo.date
 			)
 
-			localStorage.setItem('favorites', JSON.stringify(updatedFavorites))
-
 			this._isRemoveFavorites = false
 			this._commentInfo.isRemoveFavorites = this._isRemoveFavorites
+
+			// посмотреть завтра этот момент по другому
+			// добавляешь ответ на коммент в избранное, потом коммент, убираешь коммент и он не убирается
+			updatedFavorites.forEach(item => {
+				item.replies.forEach(itemTwo => {
+					if (itemTwo.date === this._commentInfo.date) {
+						itemTwo.isRemoveFavorites = this._isRemoveFavorites
+					}
+				})
+			})
+			//
+
+			localStorage.setItem('favorites', JSON.stringify(updatedFavorites))
 		} else {
-			this.checkingLocalStorageKey()
+			this.checkingLocalStorageKey('favorites')
 
 			this._isRemoveFavorites = true
 

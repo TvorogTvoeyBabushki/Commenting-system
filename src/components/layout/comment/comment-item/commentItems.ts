@@ -16,9 +16,9 @@ export class CommentItems {
 	private _commentsInfo: ICommentInfo[] = []
 
 	constructor() {
-		if (localStorage.getItem('comment')) {
+		if (localStorage.getItem('comments')) {
 			this._commentsInfo = [
-				...JSON.parse(localStorage.getItem('comment') as string)
+				...JSON.parse(localStorage.getItem('comments') as string)
 			].sort(
 				(a, b) =>
 					new Date(b.date as number).valueOf() -

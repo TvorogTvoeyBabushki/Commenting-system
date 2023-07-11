@@ -33,7 +33,7 @@ class CommentForm {
 		this.commentPanel = commentPanel!
 		this.commentItemsWrapper = commentItemsWrapper!
 
-		if (localStorage.getItem('comment')) {
+		if (localStorage.getItem('comments')) {
 			this.parseCommentsOfLocalStorage()
 		}
 
@@ -75,7 +75,7 @@ class CommentForm {
 	}
 
 	private parseCommentsOfLocalStorage() {
-		this._comments = [...JSON.parse(localStorage.getItem('comment') as string)]
+		this._comments = [...JSON.parse(localStorage.getItem('comments') as string)]
 	}
 
 	public onSubmit = (
@@ -103,32 +103,29 @@ class CommentForm {
 
 			if (this._commentInfo.author && type === 'publication') {
 				this._comments.push(this._commentInfo)
-				localStorage.setItem('comment', JSON.stringify(this._comments))
+				localStorage.setItem('comments', JSON.stringify(this._comments))
 
 				this.getCommentsLength = this._comments.length
 
 				this.commentPanel.drawAmountComments(this._comments.length)
 				this.commentPanel.select.sortComments()
 			} else if (this._commentInfo.author && type === 'reply') {
-				if (localStorage.getItem('comment')) {
+				if (localStorage.getItem('comments')) {
 					this.parseCommentsOfLocalStorage()
 
 					this._comments.forEach(comment => {
-						if (comment.date === updatedСommentInfo!.date && comment.replies) {
+						if (comment.date === updatedСommentInfo!.date) {
 							this._repliesToComment = [...(comment.replies as ICommentInfo[])]
+
+							delete this._commentInfo.replies
+							this._repliesToComment.push(this._commentInfo)
+
+							comment.replies = this._repliesToComment
 						}
 					})
 				}
 
-				this._repliesToComment.push(this._commentInfo)
-
-				this._comments.forEach(comment => {
-					if (comment.date === updatedСommentInfo!.date) {
-						comment.replies = this._repliesToComment
-					}
-				})
-
-				localStorage.setItem('comment', JSON.stringify(this._comments))
+				localStorage.setItem('comments', JSON.stringify(this._comments))
 			} else {
 				const spanNoInternetConnectionElement = document.createElement('span')
 				spanNoInternetConnectionElement.classList.add('no_internet_connection')
