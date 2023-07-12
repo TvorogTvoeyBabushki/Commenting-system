@@ -34,13 +34,6 @@ export class RepliesToComment {
 					select
 				)
 
-				const replyButtonOfToolbar = commentItem.querySelector(
-					'button'
-				) as HTMLButtonElement
-				const parentReplyButtonOfToolbar = replyButtonOfToolbar.parentNode
-
-				parentReplyButtonOfToolbar?.removeChild(replyButtonOfToolbar)
-
 				this.repliesToCommentWrapper?.append(commentItem)
 			}
 		)

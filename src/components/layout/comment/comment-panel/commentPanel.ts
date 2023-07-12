@@ -30,7 +30,7 @@ export class CommentPanel {
 			selectOptionValues,
 			this.commentItemsWrapper,
 			styles,
-			this.favorite.getStyle()
+			this.favorite
 		)
 	}
 

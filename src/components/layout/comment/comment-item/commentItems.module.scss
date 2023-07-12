@@ -61,8 +61,8 @@
 				margin-top: 15px;
 
 				> div:first-child {
-					> button:first-child {
-						margin-right: 19px;
+					> button:nth-child(2) {
+						margin-left: 19px;
 					}
 
 					> button {
@@ -182,12 +182,6 @@
 
 			> div {
 				> div:last-child {
-					> div:first-child {
-						> button:first-child {
-							margin-right: 0;
-						}
-					}
-
 					> div:last-child {
 						> button {
 							padding: 0;

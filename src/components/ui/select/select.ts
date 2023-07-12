@@ -1,3 +1,5 @@
+import { Favorite } from '../favorite/favorite'
+
 import styles from './select.module.scss'
 import { CommentItems } from '@/components/layout/comment/comment-item/commentItems'
 
@@ -10,6 +12,7 @@ export class Select {
 	commentItemsWrapper: HTMLElement
 	stylesCommentPanel: CSSModuleClasses
 	stylesFavorite: CSSModuleClasses
+	favorite: Favorite
 
 	private _previousSelect: string[] = ['По актуальности']
 	private _optionValue = ''
@@ -19,11 +22,12 @@ export class Select {
 		selectOptionValues: string[],
 		commentItemsWrapper: HTMLElement,
 		stylesCommentPanel: CSSModuleClasses,
-		stylesFavorite: CSSModuleClasses
+		favorite: Favorite
 	) {
 		this.commentItemsWrapper = commentItemsWrapper
 		this.stylesCommentPanel = stylesCommentPanel
-		this.stylesFavorite = stylesFavorite
+		this.favorite = favorite
+		this.stylesFavorite = this.favorite.getStyle()
 
 		this.draw(selectOptionValues, selectNameAttr)
 		this.showSortList()
@@ -72,29 +76,17 @@ export class Select {
 		this._optionValue = optionValue
 	}
 
-	public sortComments() {
+	public sortComments(favorites: string = '') {
 		this.commentItemsWrapper.innerHTML = ''
+
 		const commentItems = new CommentItems().sortComments(
-			this.getOptionValue,
+			!favorites ? this.getOptionValue : favorites,
 			this
 		)
 
 		commentItems?.forEach(commentItem => {
 			this.commentItemsWrapper.append(commentItem)
 		})
-
-		const parentElementSelectWrapper = this.selectWrapper.parentElement
-
-		if (parentElementSelectWrapper) {
-			const nodeListButtons = [
-				...parentElementSelectWrapper!.querySelectorAll('button')
-			]
-
-			nodeListButtons[0]?.classList.add(this.stylesCommentPanel.active)
-			nodeListButtons[nodeListButtons.length - 1].classList.remove(
-				this.stylesFavorite.active
-			)
-		}
 	}
 
 	private draw(selectOptionValues: string[], selectNameAttr: string) {
@@ -133,6 +125,23 @@ export class Select {
 				this.getOptionValue = optionValue
 
 				this.sortComments()
+
+				if (this.favorite._isShowAllComments) {
+					const parentElementSelectWrapper = this.selectWrapper.parentElement
+
+					if (parentElementSelectWrapper) {
+						const nodeListButtons = [
+							...parentElementSelectWrapper!.querySelectorAll('button')
+						]
+
+						nodeListButtons[0]?.classList.add(this.stylesCommentPanel.active)
+						nodeListButtons[nodeListButtons.length - 1].classList.remove(
+							this.stylesFavorite.active
+						)
+					}
+
+					this.favorite._isShowAllComments = false
+				}
 
 				const eventTargetElement = event.target as HTMLElement
 				spanNameSelected.innerText = `${eventTargetElement.textContent}`

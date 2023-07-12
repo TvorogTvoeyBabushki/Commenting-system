@@ -33,9 +33,7 @@ class CommentForm {
 		this.commentPanel = commentPanel!
 		this.commentItemsWrapper = commentItemsWrapper!
 
-		if (localStorage.getItem('comments')) {
-			this.parseCommentsOfLocalStorage()
-		}
+		this.parseCommentsOfLocalStorage()
 
 		const fieldProps = {
 			rows: '1',
@@ -75,7 +73,11 @@ class CommentForm {
 	}
 
 	private parseCommentsOfLocalStorage() {
-		this._comments = [...JSON.parse(localStorage.getItem('comments') as string)]
+		if (localStorage.getItem('comments')) {
+			this._comments = [
+				...JSON.parse(localStorage.getItem('comments') as string)
+			]
+		}
 	}
 
 	public onSubmit = (
@@ -102,6 +104,8 @@ class CommentForm {
 			})
 
 			if (this._commentInfo.author && type === 'publication') {
+				this.parseCommentsOfLocalStorage()
+
 				this._comments.push(this._commentInfo)
 				localStorage.setItem('comments', JSON.stringify(this._comments))
 
@@ -110,20 +114,33 @@ class CommentForm {
 				this.commentPanel.drawAmountComments(this._comments.length)
 				this.commentPanel.select.sortComments()
 			} else if (this._commentInfo.author && type === 'reply') {
-				if (localStorage.getItem('comments')) {
-					this.parseCommentsOfLocalStorage()
+				this._comments.forEach(comment => {
+					if (comment.date === updatedСommentInfo!.date) {
+						this._repliesToComment = [...(comment.replies as ICommentInfo[])]
 
-					this._comments.forEach(comment => {
-						if (comment.date === updatedСommentInfo!.date) {
-							this._repliesToComment = [...(comment.replies as ICommentInfo[])]
+						delete this._commentInfo.replies
+						this._repliesToComment.push(this._commentInfo)
 
-							delete this._commentInfo.replies
-							this._repliesToComment.push(this._commentInfo)
+						comment.replies = this._repliesToComment
+					}
 
-							comment.replies = this._repliesToComment
-						}
-					})
-				}
+					if (localStorage.getItem('favorites')) {
+						const commentsInfoOfFavorites = [
+							...JSON.parse(localStorage.getItem('favorites') as string)
+						]
+
+						commentsInfoOfFavorites.forEach(commentInfoOfFavorites => {
+							if (commentInfoOfFavorites.date === comment.date) {
+								commentInfoOfFavorites.replies = comment.replies
+							}
+						})
+
+						localStorage.setItem(
+							'favorites',
+							JSON.stringify(commentsInfoOfFavorites)
+						)
+					}
+				})
 
 				localStorage.setItem('comments', JSON.stringify(this._comments))
 			} else {

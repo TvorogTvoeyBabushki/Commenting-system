@@ -3,11 +3,18 @@ import { Select } from '@/components/ui/select/select'
 import { ICommentInfo } from '../../comment-form/commentForm'
 import styles from '../commentItems.module.scss'
 
-import { ToolBarUtils } from './toolbarUtils'
+import { ToolBarUtils } from './utils/toolbarUtils'
+import { VoteCount } from './voteCount/voteCount'
 
 class ToolBar extends ToolBarUtils {
+	_commentInfo: ICommentInfo
+	voteCount: VoteCount
+
 	constructor(commentInfo: ICommentInfo, select: Select) {
 		super(commentInfo, select)
+
+		this._commentInfo = commentInfo
+		this.voteCount = new VoteCount(this._commentInfo)
 	}
 
 	public draw(commentsItem: HTMLElement) {
@@ -82,20 +89,25 @@ class ToolBar extends ToolBarUtils {
 				iconElement,
 				buttonTextLeft
 			)
+
 			toolbarItemLeft.append(buttonElementLeft)
+
+			if (!this._commentInfo.replies && index === 0)
+				toolbarItemLeft.removeChild(buttonElementLeft)
 
 			const buttonElementRight = document.createElement('button')
 			const buttonTextRight = index === 0 ? decrement : increment
 
 			index === 0
-				? buttonElementRight.addEventListener('click', this.decrement)
-				: buttonElementRight.addEventListener('click', this.increment)
+				? buttonElementRight.addEventListener('click', this.voteCount.decrement)
+				: buttonElementRight.addEventListener('click', this.voteCount.increment)
 
 			buttonElementRight.append(buttonTextRight)
 			toolbarItemRight.append(buttonElementRight)
 
-			const previousButton = buttonElementRight.previousElementSibling
-			previousButton?.nextElementSibling?.before(this.drawVoteCount())
+			if (index !== 0) {
+				buttonElementRight.before(this.voteCount.drawVoteCount())
+			}
 
 			toolbarWrapper.append(toolbarItemLeft, toolbarItemRight)
 		})
