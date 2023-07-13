@@ -1,3 +1,5 @@
+import { Select } from '@/components/ui/select/select'
+
 import { ICommentInfo } from '../../../comment-form/commentForm'
 
 export class VoteCount {
@@ -6,14 +8,14 @@ export class VoteCount {
 	private _favorites: ICommentInfo[] = []
 	private _commentsInfo: ICommentInfo[] = []
 	private _commentInfo: ICommentInfo
+	select: Select
 
 	private _voteCount: number
-	private _isDecrement = true
-	private _isIncrement = true
 
-	constructor(commentInfo: ICommentInfo) {
+	constructor(commentInfo: ICommentInfo, select: Select) {
 		this._commentInfo = commentInfo
 		this._voteCount = this._commentInfo.voteCount as number
+		this.select = select
 
 		this.checkingLocalStorageKey('favorites')
 		this.checkingLocalStorageKey('comments')
@@ -51,6 +53,11 @@ export class VoteCount {
 				if (commentInfoOfRepliesToComment.date === this._commentInfo.date) {
 					commentInfoOfRepliesToComment.voteCount = this._voteCount
 					this._commentInfo.voteCount = this._voteCount
+
+					commentInfoOfRepliesToComment.isDecrement =
+						this._commentInfo.isDecrement
+					commentInfoOfRepliesToComment.isIncrement =
+						this._commentInfo.isIncrement
 				}
 			})
 		}
@@ -58,6 +65,9 @@ export class VoteCount {
 		if (commentInfo.date === this._commentInfo.date) {
 			commentInfo.voteCount = this._voteCount
 			this._commentInfo.voteCount = this._voteCount
+
+			commentInfo.isDecrement = this._commentInfo.isDecrement
+			commentInfo.isIncrement = this._commentInfo.isIncrement
 		}
 	}
 
@@ -77,43 +87,75 @@ export class VoteCount {
 		localStorage.setItem('favorites', JSON.stringify(this._favorites))
 	}
 
+	private conditionsForUpdateVoteCount(commentInfo: ICommentInfo) {
+		commentInfo.isDecrement = true
+		commentInfo.isIncrement = true
+
+		const commentsInfoOfRepliesToComment = commentInfo.replies as ICommentInfo[]
+
+		if (commentsInfoOfRepliesToComment) {
+			commentsInfoOfRepliesToComment.forEach(commentInfoOfRepliesToComment => {
+				commentInfoOfRepliesToComment.isDecrement = true
+				commentInfoOfRepliesToComment.isIncrement = true
+			})
+		}
+	}
+
+	private updateVoteCount() {
+		onunload = () => {
+			this.checkingLocalStorageKey('comments')
+			this.checkingLocalStorageKey('favorites')
+
+			this._commentsInfo.forEach(commentInfo => {
+				this.conditionsForUpdateVoteCount(commentInfo)
+			})
+
+			this._favorites.forEach(commentInfoOfFavorites => {
+				this.conditionsForUpdateVoteCount(commentInfoOfFavorites)
+			})
+
+			localStorage.setItem('comments', JSON.stringify(this._commentsInfo))
+			localStorage.setItem('favorites', JSON.stringify(this._favorites))
+		}
+	}
+
 	public decrement = (event: MouseEvent) => {
 		event.preventDefault()
-		const buttonElement = event.target as HTMLButtonElement
 
-		if (this._isDecrement && !this._isIncrement) {
+		if (this._commentInfo.isDecrement && !this._commentInfo.isIncrement) {
 			this._voteCount--
-			this._isIncrement = true
-		} else if (this._isDecrement) {
+
+			this._commentInfo.isIncrement = true
+		} else if (this._commentInfo.isDecrement) {
 			this._voteCount--
-			this._isDecrement = false
+
+			this._commentInfo.isDecrement = false
 		} else {
-			buttonElement.disabled = true
+			return
 		}
-
-		buttonElement.disabled = false
 
 		this.drawVoteCount()
 		this.changeVoteCountInLocalStorage()
+		this.updateVoteCount()
 	}
 
 	public increment = (event: MouseEvent) => {
 		event.preventDefault()
-		const buttonElement = event.target as HTMLButtonElement
 
-		if (!this._isDecrement && this._isIncrement) {
+		if (!this._commentInfo.isDecrement && this._commentInfo.isIncrement) {
 			this._voteCount++
-			this._isDecrement = true
-		} else if (this._isIncrement) {
+
+			this._commentInfo.isDecrement = true
+		} else if (this._commentInfo.isIncrement) {
 			this._voteCount++
-			this._isIncrement = false
+
+			this._commentInfo.isIncrement = false
 		} else {
-			buttonElement.disabled = true
+			return
 		}
-
-		buttonElement.disabled = false
 
 		this.drawVoteCount()
 		this.changeVoteCountInLocalStorage()
+		this.updateVoteCount()
 	}
 }

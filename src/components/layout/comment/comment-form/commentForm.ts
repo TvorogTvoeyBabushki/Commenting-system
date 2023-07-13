@@ -99,6 +99,8 @@ class CommentForm {
 					date: new Date(),
 					comment: textareaToForm.value.trim(),
 					voteCount: Math.round(Math.random() * 200 - 100),
+					isDecrement: true,
+					isIncrement: true,
 					replies: []
 				}
 			})
@@ -114,6 +116,8 @@ class CommentForm {
 				this.commentPanel.drawAmountComments(this._comments.length)
 				this.commentPanel.select.sortComments()
 			} else if (this._commentInfo.author && type === 'reply') {
+				this.parseCommentsOfLocalStorage()
+
 				this._comments.forEach(comment => {
 					if (comment.date === updatedСommentInfo!.date) {
 						this._repliesToComment = [...(comment.replies as ICommentInfo[])]

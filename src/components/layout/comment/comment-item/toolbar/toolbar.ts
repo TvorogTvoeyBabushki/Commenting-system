@@ -14,7 +14,7 @@ class ToolBar extends ToolBarUtils {
 		super(commentInfo, select)
 
 		this._commentInfo = commentInfo
-		this.voteCount = new VoteCount(this._commentInfo)
+		this.voteCount = new VoteCount(this._commentInfo, select)
 	}
 
 	public draw(commentsItem: HTMLElement) {

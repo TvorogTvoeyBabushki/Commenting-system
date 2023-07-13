@@ -50,11 +50,11 @@ export class CommentPanel {
 		this.commentPanelAmountComments.innerHTML = `Комментарии <span>(${commentsLength})</span>`
 
 		this.commentPanelAmountComments.onclick = () => {
-			if (this.favorite._isShowAllComments) {
+			if (this.favorite._isFavorite) {
 				this.select.sortComments()
 				this.changeStyles()
 
-				this.favorite._isShowAllComments = false
+				this.favorite._isFavorite = false
 			}
 		}
 

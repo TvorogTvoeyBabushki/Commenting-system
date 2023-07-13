@@ -4,7 +4,7 @@ import styles from './favorite.module.scss'
 import { CommentItems } from '@/components/layout/comment/comment-item/commentItems'
 
 export class Favorite {
-	public _isShowAllComments = false
+	public _isFavorite = false
 
 	public getStyle() {
 		return styles
@@ -25,7 +25,7 @@ export class Favorite {
 			favoriteButtonElement.classList.add(styles.active)
 			commentPanelAmountComments.classList.remove(stylesCommentForm.active)
 
-			this._isShowAllComments = true
+			this._isFavorite = true
 
 			commentItemsWrapper.innerHTML = ''
 			const commentItems = new CommentItems().sortComments('Избранное', select)

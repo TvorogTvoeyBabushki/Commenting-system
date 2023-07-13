@@ -82,9 +82,11 @@ export class CommentItems {
 		}
 
 		if (optionValue === 'Избранное') {
-			this._commentsInfo = [
-				...JSON.parse(localStorage.getItem('favorites') as string)
-			]
+			if (localStorage.getItem('favorites')) {
+				this._commentsInfo = [
+					...JSON.parse(localStorage.getItem('favorites') as string)
+				]
+			}
 		}
 
 		this.draw(select)

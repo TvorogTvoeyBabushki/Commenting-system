@@ -126,7 +126,7 @@ export class Select {
 
 				this.sortComments()
 
-				if (this.favorite._isShowAllComments) {
+				if (this.favorite._isFavorite) {
 					const parentElementSelectWrapper = this.selectWrapper.parentElement
 
 					if (parentElementSelectWrapper) {
@@ -140,7 +140,7 @@ export class Select {
 						)
 					}
 
-					this.favorite._isShowAllComments = false
+					this.favorite._isFavorite = false
 				}
 
 				const eventTargetElement = event.target as HTMLElement

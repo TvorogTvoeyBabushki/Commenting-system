@@ -56,16 +56,14 @@ export const addCommentToFavorite = (
 		checkingLocalStorageKey
 
 		isRemoveFavorites = true
+		commentInfo.isRemoveFavorites = isRemoveFavorites
 
-		favorites.push({
-			...commentInfo,
-			isRemoveFavorites: isRemoveFavorites
-		})
+		favorites.push(commentInfo)
 
 		localStorage.setItem('favorites', JSON.stringify(favorites))
 	}
 
-	if (select.favorite._isShowAllComments) {
+	if (select.favorite._isFavorite) {
 		select.sortComments('Избранное')
 	}
 }

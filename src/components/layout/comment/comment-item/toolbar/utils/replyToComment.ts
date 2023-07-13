@@ -29,7 +29,7 @@ export const replyToComment = (
 
 			let typeSelectFavorites = ''
 
-			if (select.favorite._isShowAllComments) {
+			if (select.favorite._isFavorite) {
 				typeSelectFavorites = 'Избранное'
 			}
 
