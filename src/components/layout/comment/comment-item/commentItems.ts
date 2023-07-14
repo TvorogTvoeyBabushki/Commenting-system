@@ -100,7 +100,6 @@ export class CommentItems {
 		commentInfo: ICommentInfo,
 		commentItem: HTMLElement,
 		isAddClass: boolean,
-		type: string,
 		authorPostedComment: string,
 		select: Select
 	) {
@@ -135,7 +134,7 @@ export class CommentItems {
 							commentInfo[elem] as number
 					  ).format('DD.MM HH:mm')}`)
 
-				if (type === 'replies' && elem === 'date') {
+				if (!commentInfo.replies && elem === 'date') {
 					const commentUserNameWrapper = document.createElement('div')
 					const iconElement = document.createElement('img')
 					const propsIconElement = [
@@ -146,6 +145,9 @@ export class CommentItems {
 					for (const [attr, val] of propsIconElement) {
 						iconElement.setAttribute(attr, val)
 					}
+
+					if (commentInfo.mainPostAuthor)
+						authorPostedComment = commentInfo.mainPostAuthor as string
 
 					commentUserNameWrapper.append(iconElement, authorPostedComment)
 					commentsItemInfoNameAndDate.append(commentUserNameWrapper)
@@ -170,14 +172,7 @@ export class CommentItems {
 		this._commentsInfo?.forEach(commentInfo => {
 			const commentItem = document.createElement('div')
 
-			this.addElementsToCommentItem(
-				commentInfo,
-				commentItem,
-				true,
-				'',
-				'',
-				select
-			)
+			this.addElementsToCommentItem(commentInfo, commentItem, true, '', select)
 
 			if (commentInfo.replies) {
 				commentItem.append(this.repliesToComment.draw(commentInfo, select))

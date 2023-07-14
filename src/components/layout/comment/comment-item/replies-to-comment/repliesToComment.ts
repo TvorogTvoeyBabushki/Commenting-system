@@ -29,7 +29,6 @@ export class RepliesToComment {
 					commentInfoOfRepliesToComment,
 					commentItem,
 					false,
-					'replies',
 					commentInfoOfPostedComment.author as string,
 					select
 				)

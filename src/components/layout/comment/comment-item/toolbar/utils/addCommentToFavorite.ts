@@ -58,6 +58,25 @@ export const addCommentToFavorite = (
 		isRemoveFavorites = true
 		commentInfo.isRemoveFavorites = isRemoveFavorites
 
+		const commentsInfo = [
+			...JSON.parse(localStorage.getItem('comments') as string)
+		]
+
+		commentsInfo.forEach(mainCommentInfo => {
+			const commentsInfoOfRepliesToComment =
+				mainCommentInfo.replies as ICommentInfo[]
+
+			if (commentsInfoOfRepliesToComment.length) {
+				commentsInfoOfRepliesToComment.forEach(
+					commentInfoOfRepliesToComment => {
+						if (commentInfoOfRepliesToComment.date === commentInfo.date) {
+							commentInfo.mainPostAuthor = mainCommentInfo.author
+						}
+					}
+				)
+			}
+		})
+
 		favorites.push(commentInfo)
 
 		localStorage.setItem('favorites', JSON.stringify(favorites))
