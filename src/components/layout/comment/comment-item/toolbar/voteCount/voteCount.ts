@@ -91,6 +91,16 @@ export class VoteCount {
 
 	private changeVoteCountInLocalStorage() {
 		this.checkChangeAndPushValueInLocalStorage(this.conditionsForChangVoteCount)
+
+		if (
+			this.select.favorite._isFavorite &&
+			!this._commentInfo.replies &&
+			this._commentInfo.isRemoveFavorites
+		) {
+			this.select.commentItemsWrapper.innerHTML = ''
+
+			this.select.sortComments('Избранное')
+		}
 	}
 
 	private conditionsForUpdateVoteCount = (commentInfo: ICommentInfo) => {
