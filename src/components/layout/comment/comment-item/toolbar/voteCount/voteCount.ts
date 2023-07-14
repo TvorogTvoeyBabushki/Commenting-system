@@ -45,7 +45,25 @@ export class VoteCount {
 		return this.spanVoteCount
 	}
 
-	private conditionsForChangVoteCount(commentInfo: ICommentInfo) {
+	private checkChangeAndPushValueInLocalStorage(
+		conditions: (commentInfo: ICommentInfo) => void
+	) {
+		this.checkingLocalStorageKey('comments')
+		this.checkingLocalStorageKey('favorites')
+
+		this._commentsInfo.forEach(commentInfo => {
+			conditions(commentInfo)
+		})
+
+		this._favorites.forEach(commentInfoOfFavorites => {
+			conditions(commentInfoOfFavorites)
+		})
+
+		localStorage.setItem('comments', JSON.stringify(this._commentsInfo))
+		localStorage.setItem('favorites', JSON.stringify(this._favorites))
+	}
+
+	private conditionsForChangVoteCount = (commentInfo: ICommentInfo) => {
 		const commentsInfoOfRepliesToComment = commentInfo.replies as ICommentInfo[]
 
 		if (commentsInfoOfRepliesToComment) {
@@ -72,22 +90,10 @@ export class VoteCount {
 	}
 
 	private changeVoteCountInLocalStorage() {
-		this.checkingLocalStorageKey('comments')
-		this.checkingLocalStorageKey('favorites')
-
-		this._commentsInfo.forEach(commentInfo => {
-			this.conditionsForChangVoteCount(commentInfo)
-		})
-
-		this._favorites.forEach(commentInfoOfFavorites => {
-			this.conditionsForChangVoteCount(commentInfoOfFavorites)
-		})
-
-		localStorage.setItem('comments', JSON.stringify(this._commentsInfo))
-		localStorage.setItem('favorites', JSON.stringify(this._favorites))
+		this.checkChangeAndPushValueInLocalStorage(this.conditionsForChangVoteCount)
 	}
 
-	private conditionsForUpdateVoteCount(commentInfo: ICommentInfo) {
+	private conditionsForUpdateVoteCount = (commentInfo: ICommentInfo) => {
 		commentInfo.isDecrement = true
 		commentInfo.isIncrement = true
 
@@ -103,19 +109,9 @@ export class VoteCount {
 
 	private updateVoteCount() {
 		onunload = () => {
-			this.checkingLocalStorageKey('comments')
-			this.checkingLocalStorageKey('favorites')
-
-			this._commentsInfo.forEach(commentInfo => {
-				this.conditionsForUpdateVoteCount(commentInfo)
-			})
-
-			this._favorites.forEach(commentInfoOfFavorites => {
-				this.conditionsForUpdateVoteCount(commentInfoOfFavorites)
-			})
-
-			localStorage.setItem('comments', JSON.stringify(this._commentsInfo))
-			localStorage.setItem('favorites', JSON.stringify(this._favorites))
+			this.checkChangeAndPushValueInLocalStorage(
+				this.conditionsForUpdateVoteCount
+			)
 		}
 	}
 

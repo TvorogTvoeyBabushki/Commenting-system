@@ -161,6 +161,7 @@ class CommentForm {
 			}
 
 			textareaToForm.value = ''
+			textareaToForm.style.height = '65px'
 			this.field.resetWordCount()
 		}
 	}
