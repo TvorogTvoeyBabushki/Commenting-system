@@ -99,6 +99,7 @@ class CommentForm {
 					date: new Date(),
 					comment: textareaToForm.value.trim(),
 					voteCount: Math.round(Math.random() * 200 - 100),
+					isRemoveFavorites: false,
 					isDecrement: true,
 					isIncrement: true,
 					replies: []
@@ -125,7 +126,10 @@ class CommentForm {
 				this.parseCommentsOfLocalStorage()
 
 				this._comments.forEach(comment => {
-					if (comment.date === updatedСommentInfo!.date) {
+					if (
+						comment.date === updatedСommentInfo!.date &&
+						comment.author === updatedСommentInfo!.author
+					) {
 						this._repliesToComment = [...(comment.replies as ICommentInfo[])]
 
 						delete this._commentInfo.replies
@@ -140,7 +144,10 @@ class CommentForm {
 						]
 
 						commentsInfoOfFavorites.forEach(commentInfoOfFavorites => {
-							if (commentInfoOfFavorites.date === comment.date) {
+							if (
+								commentInfoOfFavorites.date === comment.date &&
+								commentInfoOfFavorites.author === comment.author
+							) {
 								commentInfoOfFavorites.replies = comment.replies
 							}
 						})

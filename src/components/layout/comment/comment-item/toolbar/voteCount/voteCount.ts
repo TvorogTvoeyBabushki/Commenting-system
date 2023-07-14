@@ -68,7 +68,10 @@ export class VoteCount {
 
 		if (commentsInfoOfRepliesToComment) {
 			commentsInfoOfRepliesToComment.forEach(commentInfoOfRepliesToComment => {
-				if (commentInfoOfRepliesToComment.date === this._commentInfo.date) {
+				if (
+					commentInfoOfRepliesToComment.date === this._commentInfo.date &&
+					commentInfoOfRepliesToComment.author === this._commentInfo.author
+				) {
 					commentInfoOfRepliesToComment.voteCount = this._voteCount
 					this._commentInfo.voteCount = this._voteCount
 
@@ -80,7 +83,10 @@ export class VoteCount {
 			})
 		}
 
-		if (commentInfo.date === this._commentInfo.date) {
+		if (
+			commentInfo.date === this._commentInfo.date &&
+			commentInfo.author === this._commentInfo.author
+		) {
 			commentInfo.voteCount = this._voteCount
 			this._commentInfo.voteCount = this._voteCount
 

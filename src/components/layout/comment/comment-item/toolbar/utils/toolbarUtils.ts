@@ -14,7 +14,6 @@ export class ToolBarUtils {
 	protected _commentInfo: ICommentInfo
 
 	protected _isChangeTextFavoriteSpanElement = false
-	private _isRemoveFavorites = false
 
 	constructor(commentInfo: ICommentInfo, select: Select) {
 		this._commentInfo = commentInfo
@@ -26,7 +25,10 @@ export class ToolBarUtils {
 		this.checkingLocalStorageKey()
 
 		this._favorites.forEach(commentInfoOfFavorites => {
-			if (commentInfoOfFavorites.date === this._commentInfo.date) {
+			if (
+				commentInfoOfFavorites.date === this._commentInfo.date &&
+				commentInfoOfFavorites.author === this._commentInfo.author
+			) {
 				this._commentInfo.isRemoveFavorites =
 					commentInfoOfFavorites.isRemoveFavorites
 			}
@@ -67,7 +69,6 @@ export class ToolBarUtils {
 			fillHeartIconElement,
 			favoriteSpanElement,
 			this._isChangeTextFavoriteSpanElement,
-			this._isRemoveFavorites,
 			this._commentInfo,
 			this.checkingLocalStorageKey(),
 			this._favorites,

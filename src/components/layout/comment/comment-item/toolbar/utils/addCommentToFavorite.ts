@@ -7,7 +7,6 @@ export const addCommentToFavorite = (
 	fillHeartIconElement: HTMLImageElement,
 	favoriteSpanElement: HTMLSpanElement,
 	isChangeTextFavoriteSpanElement: boolean,
-	isRemoveFavorites: boolean,
 	commentInfo: ICommentInfo,
 	checkingLocalStorageKey: void,
 	favorites: ICommentInfo[],
@@ -25,11 +24,10 @@ export const addCommentToFavorite = (
 		isChangeTextFavoriteSpanElement = true
 	}
 
-	if (isRemoveFavorites || commentInfo.isRemoveFavorites) {
+	if (commentInfo.isRemoveFavorites) {
 		checkingLocalStorageKey
 
-		isRemoveFavorites = false
-		commentInfo.isRemoveFavorites = isRemoveFavorites
+		commentInfo.isRemoveFavorites = false
 
 		favorites.forEach(commentInfoOfFavorites => {
 			if (commentInfoOfFavorites.replies) {
@@ -38,25 +36,33 @@ export const addCommentToFavorite = (
 
 				commentsInfoOfRepliesToComment.forEach(
 					commentInfoOfRepliesToComment => {
-						if (commentInfoOfRepliesToComment.date === commentInfo.date) {
+						if (
+							commentInfoOfRepliesToComment.date === commentInfo.date &&
+							commentInfoOfRepliesToComment.author === commentInfo.author
+						) {
 							commentInfoOfRepliesToComment.isRemoveFavorites =
-								isRemoveFavorites
+								commentInfo.isRemoveFavorites
 						}
 					}
 				)
 			}
+
+			if (
+				commentInfoOfFavorites.date === commentInfo.date &&
+				commentInfoOfFavorites.author === commentInfo.author
+			)
+				commentInfoOfFavorites.isRemoveFavorites = commentInfo.isRemoveFavorites
 		})
 
 		const updatedFavorites = favorites.filter(
-			commentInfoOfFavorites => commentInfoOfFavorites.date !== commentInfo.date
+			commentInfoOfFavorites => commentInfoOfFavorites.isRemoveFavorites
 		)
 
 		localStorage.setItem('favorites', JSON.stringify(updatedFavorites))
 	} else {
 		checkingLocalStorageKey
 
-		isRemoveFavorites = true
-		commentInfo.isRemoveFavorites = isRemoveFavorites
+		commentInfo.isRemoveFavorites = true
 
 		const commentsInfo = [
 			...JSON.parse(localStorage.getItem('comments') as string)
@@ -69,7 +75,10 @@ export const addCommentToFavorite = (
 			if (commentsInfoOfRepliesToComment.length) {
 				commentsInfoOfRepliesToComment.forEach(
 					commentInfoOfRepliesToComment => {
-						if (commentInfoOfRepliesToComment.date === commentInfo.date) {
+						if (
+							commentInfoOfRepliesToComment.date === commentInfo.date &&
+							commentInfoOfRepliesToComment.author === commentInfo.author
+						) {
 							commentInfo.mainPostAuthor = mainCommentInfo.author
 						}
 					}
