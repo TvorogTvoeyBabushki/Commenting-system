@@ -39,9 +39,11 @@ export class CommentPanel {
 		this.commentPanelAmountComments.classList.add(styles.active)
 	}
 
-	private changeStyles() {
+	public changeStyles() {
 		const nodeListButtons = [...this.commentPanel.querySelectorAll('button')]
-		nodeListButtons.at(-1)?.classList.remove(this.favorite.getStyle().active)
+		nodeListButtons
+			.reverse()[0]
+			?.classList.remove(this.favorite.getStyle().active)
 
 		this.addStyles()
 	}

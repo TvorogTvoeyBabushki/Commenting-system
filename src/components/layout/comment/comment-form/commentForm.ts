@@ -106,6 +106,12 @@ class CommentForm {
 			})
 
 			if (this._commentInfo.author && type === 'publication') {
+				if (this.commentPanel.favorite._isFavorite) {
+					this.commentPanel.changeStyles()
+
+					this.commentPanel.favorite._isFavorite = false
+				}
+
 				this.parseCommentsOfLocalStorage()
 
 				this._comments.push(this._commentInfo)

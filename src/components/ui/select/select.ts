@@ -135,9 +135,9 @@ export class Select {
 						]
 
 						nodeListButtons[0]?.classList.add(this.stylesCommentPanel.active)
-						nodeListButtons[nodeListButtons.length - 1].classList.remove(
-							this.stylesFavorite.active
-						)
+						nodeListButtons
+							.reverse()[0]
+							.classList.remove(this.stylesFavorite.active)
 					}
 
 					this.favorite._isFavorite = false
