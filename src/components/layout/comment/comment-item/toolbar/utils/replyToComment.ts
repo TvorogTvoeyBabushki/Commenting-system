@@ -40,6 +40,7 @@ export const replyToComment = (
 	cancelReplyToComment.onclick = () => {
 		const field = replyToCommentForm.querySelector('textarea')
 		field!.value = ''
+		field!.style.height = '65px'
 		replyToCommentWrapper.innerHTML = ''
 
 		commentItem?.removeChild(replyToCommentWrapper)
