@@ -81,7 +81,7 @@ export class Field {
 	}
 
 	private autoResizeAndChangeWordCount(event: Event) {
-		if (this.textareaElement.scrollHeight < 91) {
+		if (this.textareaElement.scrollHeight <= 82) {
 			this.textareaElement.style.height = '65px'
 		} else {
 			this.textareaElement.style.height = 'auto'
