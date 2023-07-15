@@ -1,4 +1,5 @@
 @import '@/assets/styles/variables';
+@import '@/assets/styles/mixins';
 
 .form {
 	display: flex;
@@ -10,10 +11,12 @@
 
 	> textarea {
 		margin-right: 30px;
-	}
 
-	> button {
-		align-self: flex-start;
+		& ~ div:not(div:last-child) {
+			display: flex;
+			align-self: flex-start;
+			flex-grow: 1;
+		}
 	}
 
 	> div:last-child {
@@ -35,6 +38,29 @@
 		> p:last-child {
 			visibility: hidden;
 			color: $red;
+		}
+	}
+
+	@media (max-width: 970px) {
+		@include media-form;
+	}
+
+	@media (max-width: 560px) {
+		flex-direction: column;
+		padding: 0;
+		align-items: flex-start;
+
+		> div:first-child {
+			align-items: center;
+			padding-bottom: 20px;
+
+			> img {
+				position: relative;
+			}
+
+			> p {
+				position: relative;
+			}
 		}
 	}
 }

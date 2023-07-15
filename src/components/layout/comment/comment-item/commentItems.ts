@@ -82,11 +82,11 @@ export class CommentItems {
 		}
 
 		if (optionValue === 'Избранное') {
-			if (localStorage.getItem('favorites')) {
-				this._commentsInfo = [
-					...JSON.parse(localStorage.getItem('favorites') as string)
-				]
-			}
+			localStorage.getItem('favorites')
+				? (this._commentsInfo = [
+						...JSON.parse(localStorage.getItem('favorites') as string)
+				  ])
+				: (this._commentsInfo = [])
 		}
 
 		this.draw(select)
@@ -105,6 +105,7 @@ export class CommentItems {
 	) {
 		if (isAddClass) commentItem.classList.add('comment_item')
 
+		const commentItemWrapper = document.createElement('div')
 		const commentsItemImage = document.createElement('img')
 		const commentsItemInfo = document.createElement('div')
 		const commentsItemToolbar = new Toolbar(
@@ -164,8 +165,9 @@ export class CommentItems {
 			}
 		}
 
-		commentsItemInfo.append(commentsItemInfoWrapper, commentsItemToolbar)
-		commentItem.append(commentsItemImage, commentsItemInfo)
+		commentsItemInfo.append(commentsItemInfoWrapper)
+		commentItemWrapper.append(commentsItemImage, commentsItemInfo)
+		commentItem.append(commentItemWrapper, commentsItemToolbar)
 	}
 
 	public draw(select: Select) {

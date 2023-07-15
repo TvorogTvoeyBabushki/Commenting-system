@@ -1,8 +1,8 @@
 import { Select } from '@/components/ui/select/select'
 
 import { ICommentInfo } from '../../comment-form/commentForm'
-import styles from '../commentItems.module.scss'
 
+import styles from './toolbar.module.scss'
 import { ToolBarUtils } from './utils/toolbarUtils'
 import { VoteCount } from './voteCount/voteCount'
 
@@ -15,6 +15,10 @@ class ToolBar extends ToolBarUtils {
 
 		this._commentInfo = commentInfo
 		this.voteCount = new VoteCount(this._commentInfo, select)
+	}
+
+	private addStyle(toolbarWrapper: HTMLDivElement) {
+		toolbarWrapper.classList.add(styles.toolbar)
 	}
 
 	public draw(commentsItem: HTMLElement) {
@@ -111,6 +115,8 @@ class ToolBar extends ToolBarUtils {
 
 			toolbarWrapper.append(toolbarItemLeft, toolbarItemRight)
 		})
+
+		this.addStyle(toolbarWrapper)
 
 		return toolbarWrapper
 	}

@@ -40,6 +40,8 @@ export class VoteCount {
 			? (this.spanVoteCount.style.color = '#F00')
 			: (this.spanVoteCount.style.color = '#000')
 
+		if (this._voteCount < 0) this._voteCount *= -1
+
 		this.spanVoteCount.innerText = `${this._voteCount}`
 
 		return this.spanVoteCount

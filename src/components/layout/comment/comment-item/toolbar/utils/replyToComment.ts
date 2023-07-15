@@ -16,9 +16,10 @@ export const replyToComment = (
 		'button'
 	) as HTMLButtonElement
 	const cancelReplyToComment = new Button().draw('Отмена')
+	const parentButtonNode = buttonReplyToCommentForm.parentNode
 
-	replyToCommentWrapper.append(replyToCommentForm, cancelReplyToComment)
-
+	parentButtonNode?.append(cancelReplyToComment)
+	replyToCommentWrapper.append(replyToCommentForm)
 	commentItem.append(replyToCommentWrapper)
 
 	buttonElementLeft.disabled = true
@@ -41,8 +42,8 @@ export const replyToComment = (
 		const field = replyToCommentForm.querySelector('textarea')
 		field!.value = ''
 		field!.style.height = '65px'
-		replyToCommentWrapper.innerHTML = ''
 
+		parentButtonNode?.removeChild(cancelReplyToComment)
 		commentItem?.removeChild(replyToCommentWrapper)
 
 		buttonElementLeft.disabled = false

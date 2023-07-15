@@ -30,7 +30,8 @@ export class CommentPanel {
 			selectOptionValues,
 			this.commentItemsWrapper,
 			styles,
-			this.favorite
+			this.favorite,
+			this.commentPanel
 		)
 	}
 
@@ -40,11 +41,7 @@ export class CommentPanel {
 	}
 
 	public changeStyles() {
-		const nodeListButtons = [...this.commentPanel.querySelectorAll('button')]
-		nodeListButtons
-			.reverse()[0]
-			?.classList.remove(this.favorite.getStyle().active)
-
+		this.select.changeStylesFavorite()
 		this.addStyles()
 	}
 
@@ -64,8 +61,9 @@ export class CommentPanel {
 	}
 
 	public drawCommentPanel(commentsLength: number) {
-		this.commentPanel.append(
-			this.drawAmountComments(commentsLength),
+		const wrapperSelectAndFavorite = document.createElement('div')
+
+		wrapperSelectAndFavorite.append(
 			this.select.selectWrapper,
 			this.favorite.draw(
 				'Избранное',
@@ -74,6 +72,10 @@ export class CommentPanel {
 				styles,
 				this.select
 			)
+		)
+		this.commentPanel.append(
+			this.drawAmountComments(commentsLength),
+			wrapperSelectAndFavorite
 		)
 
 		this.addStyles()

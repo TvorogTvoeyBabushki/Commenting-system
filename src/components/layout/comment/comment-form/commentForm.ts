@@ -48,10 +48,13 @@ class CommentForm {
 	}
 
 	public draw() {
+		const buttonWrapper = document.createElement('div')
+		buttonWrapper.append(this.button.draw('Отправить'))
+
 		this.formElement.append(
 			this.userItem.draw(),
 			this.field.draw(),
-			this.button.draw('Отправить'),
+			buttonWrapper,
 			this.field.drawFieldValidation() as HTMLDivElement
 		)
 

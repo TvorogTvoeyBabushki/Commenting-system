@@ -2,18 +2,60 @@
 
 .main {
 	display: flex;
-	flex-wrap: wrap;
-	margin-bottom: 10px;
-}
 
-.divElement {
-	width: 100%;
-	max-width: 487px;
-	height: 61px;
-	background-color: $bg-block;
-	margin-bottom: 30px;
+	> aside {
+		width: 203px;
+		background-color: $bg-block;
+	}
 
-	&:nth-child(odd) {
-		margin-right: 48px;
+	> div {
+		width: 100%;
+		max-width: 1237px;
+		margin: 0 auto;
+		padding: 0 129px 0 86px;
+
+		section:first-child {
+			display: flex;
+			flex-wrap: wrap;
+			width: 100%;
+
+			> div {
+				width: 487px;
+				height: 61px;
+				background-color: $bg-block;
+				margin-bottom: 30px;
+
+				&:nth-child(odd) {
+					margin-right: 48px;
+
+					&:last-child {
+						width: 100%;
+						height: 168px;
+						margin: 0;
+					}
+				}
+
+				@media (max-width: 1410px) {
+					width: 100%;
+
+					&:nth-child(odd) {
+						margin-right: 0;
+					}
+				}
+			}
+		}
+
+		@media (max-width: 900px) {
+			padding: 0 20px;
+		}
+	}
+
+	@media (max-width: 1200px) {
+		> aside {
+			display: none;
+		}
+
+		flex-direction: column;
+		align-items: center;
 	}
 }

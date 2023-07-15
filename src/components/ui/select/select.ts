@@ -22,14 +22,15 @@ export class Select {
 		selectOptionValues: string[],
 		commentItemsWrapper: HTMLElement,
 		stylesCommentPanel: CSSModuleClasses,
-		favorite: Favorite
+		favorite: Favorite,
+		commentPanel: HTMLElement
 	) {
 		this.commentItemsWrapper = commentItemsWrapper
 		this.stylesCommentPanel = stylesCommentPanel
 		this.favorite = favorite
 		this.stylesFavorite = this.favorite.getStyle()
 
-		this.draw(selectOptionValues, selectNameAttr)
+		this.draw(selectOptionValues, selectNameAttr, commentPanel)
 		this.showSortList()
 		this.closeSortList()
 	}
@@ -89,7 +90,19 @@ export class Select {
 		})
 	}
 
-	private draw(selectOptionValues: string[], selectNameAttr: string) {
+	public changeStylesFavorite() {
+		const parentSelect = this.selectWrapper.parentNode as HTMLElement
+		const nodeButtons = [...parentSelect.querySelectorAll('button')]
+		const buttonFavorite = nodeButtons.reverse()[0]
+
+		buttonFavorite?.classList.remove(this.favorite.getStyle().active)
+	}
+
+	private draw(
+		selectOptionValues: string[],
+		selectNameAttr: string,
+		commentPanel: HTMLElement
+	) {
 		const spanNameSelected = document.createElement('span')
 
 		spanNameSelected.innerText = 'По актуальности'
@@ -127,18 +140,12 @@ export class Select {
 				this.sortComments()
 
 				if (this.favorite._isFavorite) {
-					const parentElementSelectWrapper = this.selectWrapper.parentElement
+					const buttonAmountComments = commentPanel.querySelector(
+						'button'
+					) as HTMLButtonElement
 
-					if (parentElementSelectWrapper) {
-						const nodeListButtons = [
-							...parentElementSelectWrapper!.querySelectorAll('button')
-						]
-
-						nodeListButtons[0]?.classList.add(this.stylesCommentPanel.active)
-						nodeListButtons
-							.reverse()[0]
-							.classList.remove(this.stylesFavorite.active)
-					}
+					buttonAmountComments.classList.add(this.stylesCommentPanel.active)
+					this.changeStylesFavorite()
 
 					this.favorite._isFavorite = false
 				}
