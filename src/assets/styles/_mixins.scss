@@ -1,21 +1,24 @@
 @mixin media-form {
 	flex-wrap: wrap;
 
-	> textarea {
-		max-width: 100%;
+	> div:first-child ~ div:not(div:last-child) {
 		margin-right: 0;
 
-		& ~ div:not(div:last-child) {
-			margin-top: 30px;
+		> textarea {
+			max-width: 100%;
+		}
+
+		> div:last-child {
+			right: 0;
+
+			> p:first-child {
+				order: 1;
+				margin: 0 0 0 30px;
+			}
 		}
 	}
 
 	> div:last-child {
-		right: 0;
-
-		> p:first-child {
-			order: 1;
-			margin: 0 0 0 30px;
-		}
+		margin-top: 30px;
 	}
 }

@@ -18,52 +18,51 @@
 				cursor: pointer;
 
 				position: absolute;
-				top: 0;
 				left: 0;
+				right: 0;
 			}
 
 			> div {
+				display: flex;
+				align-items: center;
+				align-self: flex-start;
+
+				> p:first-child {
+					margin-right: 15px;
+					font-weight: 500;
+					color: $blue;
+					cursor: pointer;
+				}
+
 				> div {
-					> div {
-						display: flex;
-						align-items: center;
-						margin-bottom: 15px;
+					display: flex;
+					align-items: center;
+					margin-right: 15px;
+					color: rgba($black, 0.4);
 
-						> p:first-child {
-							margin-right: 15px;
-							font-weight: 500;
-							color: $blue;
-							cursor: pointer;
-						}
-
-						> div {
-							display: flex;
-							align-items: center;
-							margin-right: 15px;
-							color: rgba($black, 0.4);
-
-							> img {
-								width: 25px;
-								height: 25px;
-								margin-right: 13px;
-							}
-						}
-
-						> p:last-child {
-							font-size: 14px;
-							opacity: 0.4;
-							line-height: 1.8;
-							letter-spacing: 1px;
-						}
+					> img {
+						width: 25px;
+						height: 25px;
+						margin-right: 13px;
 					}
+				}
 
-					> P {
-						@media (max-width: 460px) {
-							font-size: 16px;
-						}
+				> p:last-child {
+					font-size: 14px;
+					opacity: 0.4;
+					line-height: 1.8;
+					letter-spacing: 1px;
+
+					@media (max-width: 700px) {
+						font-size: 12px;
 					}
 				}
 			}
+		}
+
+		> div.comment_text {
+			margin-left: 91px;
+			margin-top: 10px;
 		}
 
 		> div:last-child:not(div.toolbar, div.replies) {
@@ -71,28 +70,48 @@
 				margin-top: 30px;
 				margin-bottom: 0;
 
-				> textarea {
-					max-width: 563px;
+				> div:first-child ~ div:not(div:last-child) {
+					> div:last-child {
+						right: 12%;
+					}
+				}
 
-					& ~ div {
-						> button {
-							padding: 20px 30px;
-							width: 100%;
-							max-width: 154px;
-						}
+				> div:last-child {
+					display: flex;
 
-						> button:last-child {
+					> button {
+						padding: 20px 30px;
+						width: 154px;
+
+						& ~ button {
 							margin-left: 30px;
 						}
 					}
 				}
 
-				> div:last-child {
-					right: 12%;
-				}
-
 				@media (max-width: 1410px) {
 					@include media-form;
+				}
+
+				@media (max-width: 660px) {
+					> div:last-child {
+						margin-top: 10px;
+					}
+				}
+
+				@media (max-width: 560px) {
+					> div:last-child {
+						flex-direction: column;
+
+						> button {
+							width: 100%;
+
+							& ~ button {
+								margin-top: 20px;
+								margin-left: 0;
+							}
+						}
+					}
 				}
 			}
 		}
@@ -104,31 +123,6 @@
 				margin: 30px 0 0;
 			}
 
-			@media (max-width: 700px) {
-				> div {
-					> div {
-						> img ~ div {
-							> div:first-child {
-								> div:first-child {
-									flex-wrap: wrap;
-									align-items: baseline;
-
-									> p ~ div {
-										order: 1;
-										width: 100%;
-										margin-top: 10px;
-									}
-
-									> p:last-child {
-										font-size: 12px;
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-
 			@media (max-width: 460px) {
 				margin-left: 0;
 			}
@@ -136,6 +130,47 @@
 
 		@media (max-width: 700px) {
 			margin-bottom: 70px;
+
+			> div:first-child {
+				> div {
+					flex-wrap: wrap;
+					align-items: baseline;
+
+					> p ~ div {
+						order: 1;
+						width: 100%;
+						margin-top: 10px;
+					}
+				}
+			}
+		}
+
+		@media (max-width: 560px) {
+			> div:first-child {
+				display: flex;
+				position: static;
+				padding-left: 0;
+
+				> img {
+					position: static;
+				}
+
+				> div {
+					align-self: center;
+					flex-wrap: wrap;
+				}
+			}
+
+			> div.comment_text {
+				margin-top: 15px;
+				margin-left: 0;
+			}
+		}
+
+		@media (max-width: 460px) {
+			> div.comment_text {
+				font-size: 16px;
+			}
 		}
 	}
 }

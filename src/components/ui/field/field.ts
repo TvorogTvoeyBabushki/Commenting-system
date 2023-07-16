@@ -20,10 +20,20 @@ export class Field {
 	}
 
 	public draw() {
+		const textareaAndFieldValidationWrapper = document.createElement('div')
+
+		textareaAndFieldValidationWrapper.append(
+			this.textareaElement,
+			this.drawFieldValidation()!
+		)
+		textareaAndFieldValidationWrapper.classList.add(
+			styles.textarea_field_validation_wrapper
+		)
+
 		this.addStyle()
 		this.addAttribute()
 
-		return this.textareaElement
+		return textareaAndFieldValidationWrapper
 	}
 
 	public resetWordCount() {

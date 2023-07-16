@@ -105,10 +105,11 @@ export class CommentItems {
 	) {
 		if (isAddClass) commentItem.classList.add('comment_item')
 
-		const commentItemWrapper = document.createElement('div')
-		const commentsItemImage = document.createElement('img')
-		const commentsItemInfo = document.createElement('div')
-		const commentsItemToolbar = new Toolbar(
+		const commentItemImageAndInfoWrapper = document.createElement('div')
+		const commentItemImage = document.createElement('img')
+		const commentItemInfo = document.createElement('div')
+		const commentItemCommentText = document.createElement('div')
+		const commentItemToolbar = new Toolbar(
 			commentInfo as ICommentInfo,
 			select
 		).draw(commentItem)
@@ -119,11 +120,8 @@ export class CommentItems {
 		]
 
 		for (const [attr, val] of imageProps) {
-			commentsItemImage.setAttribute(attr, val)
+			commentItemImage.setAttribute(attr, val)
 		}
-
-		const commentsItemInfoWrapper = document.createElement('div')
-		const commentsItemInfoNameAndDate = document.createElement('div')
 
 		for (const elem in commentInfo) {
 			const paragraphElement = document.createElement('p')
@@ -151,23 +149,26 @@ export class CommentItems {
 						authorPostedComment = commentInfo.mainPostAuthor as string
 
 					commentUserNameWrapper.append(iconElement, authorPostedComment)
-					commentsItemInfoNameAndDate.append(commentUserNameWrapper)
+					commentItemInfo.append(commentUserNameWrapper)
 				}
 
-				commentsItemInfoNameAndDate.append(paragraphElement)
-				commentsItemInfoWrapper.append(commentsItemInfoNameAndDate)
+				commentItemInfo.append(paragraphElement)
 			}
 
 			if (elem === 'comment') {
 				paragraphElement.innerText = `${commentInfo[elem]}`
 
-				commentsItemInfoWrapper.append(paragraphElement)
+				commentItemCommentText.append(paragraphElement)
+				commentItemCommentText.classList.add(styles.comment_text)
 			}
 		}
 
-		commentsItemInfo.append(commentsItemInfoWrapper)
-		commentItemWrapper.append(commentsItemImage, commentsItemInfo)
-		commentItem.append(commentItemWrapper, commentsItemToolbar)
+		commentItemImageAndInfoWrapper.append(commentItemImage, commentItemInfo)
+		commentItem.append(
+			commentItemImageAndInfoWrapper,
+			commentItemCommentText,
+			commentItemToolbar
+		)
 	}
 
 	public draw(select: Select) {

@@ -4,12 +4,11 @@
 .toolbar {
 	display: flex;
 	align-items: center;
-	margin-top: 15px;
-	margin-left: 91px;
+	margin: 15px 0 0 91px;
 
 	> div:first-child {
-		> button:nth-child(2) {
-			margin-left: 19px;
+		> button:first-child {
+			margin-right: 19px;
 		}
 
 		> button {
@@ -94,6 +93,8 @@
 	}
 
 	@media (max-width: 460px) {
+		margin-top: 0;
+
 		> div:first-child {
 			font-size: 16px;
 		}

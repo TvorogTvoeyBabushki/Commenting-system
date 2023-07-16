@@ -16,7 +16,7 @@ class UserItem {
 	private _userInfo: IUser[] = []
 
 	private addStyle() {
-		this.wrapperUser.classList.add(styles.wrapper_user)
+		this.wrapperUser.classList.add(styles.user_wrapper)
 	}
 
 	public get getUserInfo() {
@@ -55,6 +55,7 @@ class UserItem {
 		try {
 			const { data } = await axios.get('https://randomuser.me/api/', {
 				headers: {
+					'Access-Control-Allow-Origin': '*',
 					'Content-Type': 'application/json'
 				}
 			})
