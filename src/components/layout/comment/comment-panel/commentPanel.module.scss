@@ -1,7 +1,11 @@
 @import '@/assets/styles/variables';
 
 .comment_panel {
+	display: -webkit-box;
+	display: -ms-flexbox;
 	display: flex;
+	-webkit-box-align: baseline;
+	-ms-flex-align: baseline;
 	align-items: baseline;
 	margin-bottom: 32px;
 
@@ -10,12 +14,16 @@
 		color: rgba($black, 0.4);
 		padding-bottom: 5px;
 		background-color: transparent;
+		-webkit-transition: all 0.2s ease;
+		-o-transition: all 0.2s ease;
 		transition: all 0.2s ease;
 
 		> span {
 			margin-left: 10px;
 			font-size: 20px;
 			color: rgba($black, 0.4);
+			-webkit-transition: color 0.2s ease;
+			-o-transition: color 0.2s ease;
 			transition: color 0.2s ease;
 		}
 
@@ -34,12 +42,18 @@
 	}
 
 	> div {
+		display: -webkit-box;
+		display: -ms-flexbox;
 		display: flex;
+		-ms-flex-wrap: wrap;
 		flex-wrap: wrap;
+		-webkit-box-align: baseline;
+		-ms-flex-align: baseline;
 		align-items: baseline;
 	}
 
 	@media (max-width: 770px) {
+		-ms-flex-wrap: wrap;
 		flex-wrap: wrap;
 
 		> div {

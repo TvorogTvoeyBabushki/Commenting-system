@@ -1,11 +1,15 @@
 @import '@/assets/styles/variables';
 
 .textarea_field_validation_wrapper {
+	display: -webkit-box;
+	display: -ms-flexbox;
 	display: flex;
 	width: 100%;
 	margin-right: 30px;
 
 	> div:last-child {
+		display: -webkit-box;
+		display: -ms-flexbox;
 		display: flex;
 
 		position: absolute;
@@ -61,9 +65,42 @@
 
 	border: none;
 	border-radius: 5px;
+	-webkit-box-shadow: 0 0 10px rgba($black, 0.2);
 	box-shadow: 0 0 10px rgba($black, 0.2);
 
 	letter-spacing: 1px;
+
+	&::-webkit-input-placeholder {
+		opacity: 0.4;
+
+		@media (max-width: 350px) {
+			font-size: 14px;
+		}
+	}
+
+	&::-moz-placeholder {
+		opacity: 0.4;
+
+		@media (max-width: 350px) {
+			font-size: 14px;
+		}
+	}
+
+	&:-ms-input-placeholder {
+		opacity: 0.4;
+
+		@media (max-width: 350px) {
+			font-size: 14px;
+		}
+	}
+
+	&::-ms-input-placeholder {
+		opacity: 0.4;
+
+		@media (max-width: 350px) {
+			font-size: 14px;
+		}
+	}
 
 	&::placeholder {
 		opacity: 0.4;

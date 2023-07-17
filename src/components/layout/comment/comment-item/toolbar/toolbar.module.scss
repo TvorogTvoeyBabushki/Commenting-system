@@ -2,7 +2,11 @@
 @import '@/assets/styles/mixins';
 
 .toolbar {
+	display: -webkit-box;
+	display: -ms-flexbox;
 	display: flex;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
 	align-items: center;
 	margin: 15px 0 0 91px;
 
@@ -18,6 +22,8 @@
 			background-color: transparent;
 			border: 0;
 			position: relative;
+			-webkit-transition: color 0.3s ease-in-out;
+			-o-transition: color 0.3s ease-in-out;
 			transition: color 0.3s ease-in-out;
 
 			&:hover {
@@ -37,7 +43,11 @@
 				position: absolute;
 				top: 50%;
 				left: 0;
+				-webkit-transform: translateY(-50%);
+				-ms-transform: translateY(-50%);
 				transform: translateY(-50%);
+				-webkit-transition: opacity 0.3s ease-in-out;
+				-o-transition: opacity 0.3s ease-in-out;
 				transition: opacity 0.3s ease-in-out;
 
 				&.fill_heart {
@@ -57,19 +67,31 @@
 	}
 
 	> div:last-child {
+		display: -webkit-box;
+		display: -ms-flexbox;
 		display: flex;
+		-webkit-box-align: center;
+		-ms-flex-align: center;
 		align-items: center;
 		margin-left: 30px;
 
 		> button {
+			display: -webkit-box;
+			display: -ms-flexbox;
 			display: flex;
+			-webkit-box-pack: center;
+			-ms-flex-pack: center;
 			justify-content: center;
+			-webkit-box-align: center;
+			-ms-flex-align: center;
 			align-items: center;
 			width: 25px;
 			height: 25px;
 			background-color: rgba($black, 0.1);
 			border-radius: 50%;
 			font-weight: 500;
+			-webkit-transition: background-color 0.3s ease-in-out;
+			-o-transition: background-color 0.3s ease-in-out;
 			transition: background-color 0.3s ease-in-out;
 
 			&:hover {
@@ -100,6 +122,9 @@
 		}
 
 		> div:last-child {
+			-webkit-box-orient: vertical;
+			-webkit-box-direction: normal;
+			-ms-flex-direction: column;
 			flex-direction: column;
 			margin-left: 15px;
 

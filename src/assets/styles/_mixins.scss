@@ -1,4 +1,5 @@
 @mixin media-form {
+	-ms-flex-wrap: wrap;
 	flex-wrap: wrap;
 
 	> div:first-child ~ div:not(div:last-child) {
@@ -12,6 +13,8 @@
 			right: 0;
 
 			> p:first-child {
+				-webkit-box-ordinal-group: 2;
+				-ms-flex-order: 1;
 				order: 1;
 				margin: 0 0 0 30px;
 			}
