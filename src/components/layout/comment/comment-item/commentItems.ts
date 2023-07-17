@@ -27,6 +27,16 @@ export class CommentItems {
 		}
 	}
 
+	private loadingAnimation() {
+		document.addEventListener('DOMContentLoaded', () =>
+			this.commentsWrapper.classList.add(styles.load)
+		)
+	}
+
+	public getStyle() {
+		return styles
+	}
+
 	private addStyle() {
 		this.commentsWrapper.classList.add(styles.comments_wrapper)
 	}
@@ -92,6 +102,9 @@ export class CommentItems {
 		this.draw(select)
 
 		const commentItems = this.commentsWrapper.querySelectorAll('.comment_item')
+
+		const lastCommentItem = commentItems[0]
+		lastCommentItem.classList.add('last_comment')
 
 		return commentItems
 	}
@@ -185,6 +198,7 @@ export class CommentItems {
 		})
 
 		this.addStyle()
+		this.loadingAnimation()
 
 		return this.commentsWrapper
 	}

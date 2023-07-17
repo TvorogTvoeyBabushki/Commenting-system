@@ -87,7 +87,7 @@ class CommentForm {
 	public onSubmit = (
 		event: Event,
 		type: string,
-		updatedСommentInfo: ICommentInfo | null
+		updatedCommentInfo: ICommentInfo | null
 	) => {
 		event.preventDefault()
 
@@ -131,8 +131,8 @@ class CommentForm {
 
 				this._comments.forEach(comment => {
 					if (
-						comment.date === updatedСommentInfo!.date &&
-						comment.author === updatedСommentInfo!.author
+						comment.date === updatedCommentInfo!.date &&
+						comment.author === updatedCommentInfo!.author
 					) {
 						this._repliesToComment = [...(comment.replies as ICommentInfo[])]
 

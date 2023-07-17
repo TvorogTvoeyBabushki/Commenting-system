@@ -19,7 +19,8 @@ export class Favorite {
 		commentItemsWrapper: HTMLElement,
 		commentPanelAmountComments: HTMLButtonElement,
 		stylesCommentForm: CSSModuleClasses,
-		select: Select
+		select: Select,
+		commentItemsStyle: CSSModuleClasses
 	) {
 		favoriteButtonElement.onclick = () => {
 			favoriteButtonElement.classList.add(styles.active)
@@ -29,6 +30,8 @@ export class Favorite {
 
 			commentItemsWrapper.innerHTML = ''
 			const commentItems = new CommentItems().sortComments('Избранное', select)
+
+			commentItemsWrapper.classList.remove(commentItemsStyle.load)
 
 			commentItems?.forEach(commentItem => {
 				commentItemsWrapper.append(commentItem)
@@ -41,7 +44,8 @@ export class Favorite {
 		commentItemsWrapper: HTMLElement,
 		commentPanelAmountComments: HTMLButtonElement,
 		stylesCommentForm: CSSModuleClasses,
-		select: Select
+		select: Select,
+		commentItemsStyle: CSSModuleClasses
 	) {
 		const favoriteButtonElement = document.createElement('button')
 		const favoriteButtonText = document.createElement('span')
@@ -65,7 +69,8 @@ export class Favorite {
 			commentItemsWrapper,
 			commentPanelAmountComments,
 			stylesCommentForm,
-			select
+			select,
+			commentItemsStyle
 		)
 
 		return favoriteButtonElement

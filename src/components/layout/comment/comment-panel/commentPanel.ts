@@ -1,6 +1,8 @@
 import { Favorite } from '@/components/ui/favorite/favorite'
 import { Select } from '@/components/ui/select/select'
 
+import { CommentItems } from '../comment-item/commentItems'
+
 import styles from './commentPanel.module.scss'
 
 export class CommentPanel {
@@ -8,12 +10,14 @@ export class CommentPanel {
 	commentPanelAmountComments = document.createElement('button')
 
 	commentItemsWrapper: HTMLElement
+	commentItemsStyle: CSSModuleClasses
 
 	select: Select
 	favorite: Favorite
 
-	constructor(commentItemsWrapper: HTMLElement) {
-		this.commentItemsWrapper = commentItemsWrapper
+	constructor(commentItems: CommentItems) {
+		this.commentItemsWrapper = commentItems.commentsWrapper
+		this.commentItemsStyle = commentItems.getStyle()
 
 		const selectOptionValues = [
 			'По дате',
@@ -31,7 +35,8 @@ export class CommentPanel {
 			this.commentItemsWrapper,
 			styles,
 			this.favorite,
-			this.commentPanel
+			this.commentPanel,
+			this.commentItemsStyle
 		)
 	}
 
@@ -70,7 +75,8 @@ export class CommentPanel {
 				this.commentItemsWrapper,
 				this.commentPanelAmountComments,
 				styles,
-				this.select
+				this.select,
+				this.commentItemsStyle
 			)
 		)
 		this.commentPanel.append(

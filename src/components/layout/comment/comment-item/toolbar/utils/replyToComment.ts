@@ -35,6 +35,10 @@ export const replyToComment = (
 			}
 
 			select.sortComments(typeSelectFavorites)
+
+			const lastCommentItem = document.querySelector('.last_comment') // попробовать ещё через метод draw
+
+			lastCommentItem?.classList.remove('last_comment')
 		}
 	}
 

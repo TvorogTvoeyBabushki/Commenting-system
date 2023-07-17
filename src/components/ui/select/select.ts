@@ -13,6 +13,7 @@ export class Select {
 	stylesCommentPanel: CSSModuleClasses
 	stylesFavorite: CSSModuleClasses
 	favorite: Favorite
+	commentItemsStyle: CSSModuleClasses
 
 	private _previousSelect: string[] = ['По актуальности']
 	private _optionValue = ''
@@ -23,12 +24,14 @@ export class Select {
 		commentItemsWrapper: HTMLElement,
 		stylesCommentPanel: CSSModuleClasses,
 		favorite: Favorite,
-		commentPanel: HTMLElement
+		commentPanel: HTMLElement,
+		commentItemsStyle: CSSModuleClasses
 	) {
 		this.commentItemsWrapper = commentItemsWrapper
 		this.stylesCommentPanel = stylesCommentPanel
 		this.favorite = favorite
 		this.stylesFavorite = this.favorite.getStyle()
+		this.commentItemsStyle = commentItemsStyle
 
 		this.draw(selectOptionValues, selectNameAttr, commentPanel)
 		this.showSortList()
@@ -88,6 +91,8 @@ export class Select {
 		commentItems?.forEach(commentItem => {
 			this.commentItemsWrapper.append(commentItem)
 		})
+
+		this.commentItemsWrapper.classList.remove(this.commentItemsStyle.load)
 	}
 
 	public changeStylesFavorite() {
@@ -96,6 +101,48 @@ export class Select {
 		const buttonFavorite = nodeButtons.reverse()[0]
 
 		buttonFavorite?.classList.remove(this.favorite.getStyle().active)
+	}
+
+	private handleClickLink(
+		event: MouseEvent,
+		optionValue: string,
+		commentPanel: HTMLElement,
+		spanNameSelected: HTMLSpanElement,
+		checkMarkElement: HTMLImageElement
+	) {
+		event.preventDefault()
+
+		this.getOptionValue = optionValue
+
+		this.sortComments()
+
+		if (this.favorite._isFavorite) {
+			const buttonAmountComments = commentPanel.querySelector(
+				'button'
+			) as HTMLButtonElement
+
+			buttonAmountComments.classList.add(this.stylesCommentPanel.active)
+			this.changeStylesFavorite()
+
+			this.favorite._isFavorite = false
+		}
+
+		const eventTargetElement = event.target as HTMLElement
+		spanNameSelected.innerText = `${eventTargetElement.textContent}`
+
+		const checkMarkElements: NodeListOf<HTMLElement> =
+			document?.querySelectorAll('.check_mark')
+
+		if (this._previousSelect[0] !== eventTargetElement.textContent) {
+			checkMarkElements?.forEach(checkMarkElement => {
+				checkMarkElement.style.visibility = 'hidden'
+			})
+
+			checkMarkElement.style.visibility = 'visible'
+
+			this._previousSelect.pop()
+			this._previousSelect.push(eventTargetElement.textContent as string)
+		}
 	}
 
 	private draw(
@@ -132,41 +179,15 @@ export class Select {
 			linkElement.innerText = optionValue
 			linkElement.insertAdjacentElement('afterbegin', checkMarkElement)
 
-			linkElement.addEventListener('click', event => {
-				event.preventDefault()
-
-				this.getOptionValue = optionValue
-
-				this.sortComments()
-
-				if (this.favorite._isFavorite) {
-					const buttonAmountComments = commentPanel.querySelector(
-						'button'
-					) as HTMLButtonElement
-
-					buttonAmountComments.classList.add(this.stylesCommentPanel.active)
-					this.changeStylesFavorite()
-
-					this.favorite._isFavorite = false
-				}
-
-				const eventTargetElement = event.target as HTMLElement
-				spanNameSelected.innerText = `${eventTargetElement.textContent}`
-
-				const checkMarkElements: NodeListOf<HTMLElement> =
-					document?.querySelectorAll('.check_mark')
-
-				if (this._previousSelect[0] !== eventTargetElement.textContent) {
-					checkMarkElements?.forEach(checkMarkElement => {
-						checkMarkElement.style.visibility = 'hidden'
-					})
-
-					checkMarkElement.style.visibility = 'visible'
-
-					this._previousSelect.pop()
-					this._previousSelect.push(eventTargetElement.textContent as string)
-				}
-			})
+			linkElement.addEventListener('click', event =>
+				this.handleClickLink(
+					event,
+					optionValue,
+					commentPanel,
+					spanNameSelected,
+					checkMarkElement
+				)
+			)
 
 			liElement.append(linkElement)
 			liElement.classList.add(styles.active)

@@ -6,7 +6,7 @@ import styles from './commentSystem.module.scss'
 class CommentSystem {
 	commentSection = document.createElement('section')
 	commentItems = new CommentItems()
-	commentPanel = new CommentPanel(this.commentItems.commentsWrapper)
+	commentPanel = new CommentPanel(this.commentItems)
 	commentForm = new CommentForm(
 		this.commentPanel,
 		this.commentItems.commentsWrapper

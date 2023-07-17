@@ -31,3 +31,19 @@ img {
 	font-size: 25px;
 	color: $red;
 }
+
+.last_comment {
+	animation: transformComments 1.4s ease-in-out;
+}
+
+@keyframes transformComments {
+	from {
+		transform: translateX(-200px);
+	}
+	50% {
+		transform: translateX(100px);
+	}
+	to {
+		transform: translateX(0px);
+	}
+}
