@@ -90,17 +90,18 @@ export class Field {
 		return this.divFieldValidation
 	}
 
-	private autoResizeAndChangeWordCount(event: Event) {
-		if (this.textareaElement.scrollHeight <= 82) {
-			this.textareaElement.style.height = '65px'
-		} else {
+	private autoResizeAndChangeWordCount() {
+		const numberLineBreaks = this.textareaElement.value.match(/\n/g)
+
+		if (numberLineBreaks) {
+			this.textareaElement.rows = numberLineBreaks.length + 1
 			this.textareaElement.style.height = 'auto'
-			this.textareaElement.style.height = `${this.textareaElement.scrollHeight}px`
+		} else {
+			this.textareaElement.rows = 1
+			this.textareaElement.style.height = '70px'
 		}
 
-		const textareaElement = event.target as HTMLTextAreaElement
-
-		this._wordCount = textareaElement.value.trim().length
+		this._wordCount = this.textareaElement.value.trim().length
 		this.drawFieldValidation()
 	}
 

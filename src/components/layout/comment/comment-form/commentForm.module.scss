@@ -17,7 +17,7 @@
 		@include media-form;
 	}
 
-	@media (max-width: 660px) {
+	@media (max-width: 730px) {
 		flex-direction: column;
 		padding: 0;
 		align-items: flex-start;
@@ -26,11 +26,11 @@
 			align-items: center;
 
 			> img {
-				position: relative;
+				position: static;
 			}
 
 			> p {
-				position: relative;
+				position: static;
 			}
 		}
 
