@@ -36,6 +36,9 @@ export class Favorite {
 			commentItems?.forEach(commentItem => {
 				commentItemsWrapper.append(commentItem)
 			})
+
+			const lastCommentItem = commentItemsWrapper.querySelector('.last_comment')
+			lastCommentItem?.classList.remove('last_comment')
 		}
 	}
 

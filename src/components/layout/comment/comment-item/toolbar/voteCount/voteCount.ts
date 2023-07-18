@@ -14,11 +14,12 @@ export class VoteCount {
 
 	constructor(commentInfo: ICommentInfo, select: Select) {
 		this._commentInfo = commentInfo
-		this._voteCount = this._commentInfo.voteCount as number
 		this.select = select
 
 		this.checkingLocalStorageKey('favorites')
 		this.checkingLocalStorageKey('comments')
+
+		this._voteCount = this._commentInfo.voteCount as number
 	}
 
 	public checkingLocalStorageKey(type: string) {
@@ -40,9 +41,36 @@ export class VoteCount {
 			? (this.spanVoteCount.style.color = '#F00')
 			: (this.spanVoteCount.style.color = '#000')
 
-		if (this._voteCount < 0) this._voteCount *= -1
+		if (this._voteCount < 0) {
+			this._voteCount *= -1
+		}
 
 		this.spanVoteCount.innerText = `${this._voteCount}`
+
+		this._commentsInfo.forEach(commentInfo => {
+			const commentsInfoOfRepliesToComment =
+				commentInfo.replies as ICommentInfo[]
+
+			if (commentsInfoOfRepliesToComment.length) {
+				commentsInfoOfRepliesToComment.forEach(
+					commentInfoOfRepliesToComment => {
+						if (
+							commentInfoOfRepliesToComment.date === this._commentInfo.date &&
+							commentInfoOfRepliesToComment.author === this._commentInfo.author
+						) {
+							if ((commentInfoOfRepliesToComment.voteCount as number) < 0)
+								this._voteCount *= -1
+						}
+					}
+				)
+			}
+			if (
+				commentInfo.date === this._commentInfo.date &&
+				commentInfo.author === this._commentInfo.author
+			) {
+				if ((commentInfo.voteCount as number) < 0) this._voteCount *= -1
+			}
+		})
 
 		return this.spanVoteCount
 	}
@@ -148,8 +176,8 @@ export class VoteCount {
 			return
 		}
 
-		this.drawVoteCount()
 		this.changeVoteCountInLocalStorage()
+		this.drawVoteCount()
 		this.updateVoteCount()
 	}
 
@@ -168,8 +196,8 @@ export class VoteCount {
 			return
 		}
 
-		this.drawVoteCount()
 		this.changeVoteCountInLocalStorage()
+		this.drawVoteCount()
 		this.updateVoteCount()
 	}
 }

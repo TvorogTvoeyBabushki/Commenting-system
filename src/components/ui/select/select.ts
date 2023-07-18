@@ -127,6 +127,10 @@ export class Select {
 			this.favorite._isFavorite = false
 		}
 
+		const lastCommentItem =
+			this.commentItemsWrapper.querySelector('.last_comment')
+		lastCommentItem?.classList.remove('last_comment')
+
 		const eventTargetElement = event.target as HTMLElement
 		spanNameSelected.innerText = `${eventTargetElement.textContent}`
 

@@ -58,6 +58,10 @@ export class CommentPanel {
 				this.select.sortComments()
 				this.changeStyles()
 
+				const lastCommentItem =
+					this.commentItemsWrapper.querySelector('.last_comment')
+				lastCommentItem?.classList.remove('last_comment')
+
 				this.favorite._isFavorite = false
 			}
 		}
