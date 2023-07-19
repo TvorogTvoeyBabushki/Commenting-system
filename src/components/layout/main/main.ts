@@ -2,7 +2,7 @@ import CommentSystem from '../comment/commentSystem'
 
 import styles from './main.module.scss'
 
-export class BlockMain {
+export class Main {
 	mainElement = document.createElement('main')
 	divElements: HTMLElement[] = []
 
