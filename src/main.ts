@@ -1,6 +1,6 @@
 import '@/assets/styles/global.scss'
 
-import { Main } from './components/layout/main/main'
+import { BlockMain } from './components/layout/main/blockMain'
 import Layout from '@/components/layout/layout'
 
 class Home {
@@ -8,7 +8,7 @@ class Home {
 	divElements: HTMLElement[] = []
 	appRoot = document.getElementById('app')
 
-	main = new Main().draw()
+	main = new BlockMain().draw()
 	layout = new Layout().draw(this.main)
 
 	constructor() {
