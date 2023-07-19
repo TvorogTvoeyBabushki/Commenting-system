@@ -93,10 +93,19 @@ export class Field {
 	private autoResizeAndChangeWordCount() {
 		const numberLineBreaks = this.textareaElement.value.match(/\n/g)
 
+		this.textareaElement.style.height = 'auto'
+		this.textareaElement.style.height = `${this.textareaElement.scrollHeight}px`
+
+		if (this.textareaElement.scrollHeight >= 400) {
+			this.textareaElement.style.overflow = 'visible'
+		}
+
 		if (numberLineBreaks) {
 			this.textareaElement.rows = numberLineBreaks.length + 1
-			this.textareaElement.style.height = 'auto'
-		} else {
+		} else if (
+			this.textareaElement.value.trim().length <= 52 &&
+			!numberLineBreaks
+		) {
 			this.textareaElement.rows = 1
 			this.textareaElement.style.height = '70px'
 		}
