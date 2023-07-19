@@ -21,3 +21,4 @@ class Home {
 }
 
 new Home()
+document.getElementById('app')!.innerHTML = 'qwe'
