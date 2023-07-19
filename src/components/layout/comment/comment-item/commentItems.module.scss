@@ -200,7 +200,8 @@
 }
 
 .load {
-	> div {
+	> div,
+	.replies {
 		animation: transformComments 1.4s ease-in-out;
 	}
 }

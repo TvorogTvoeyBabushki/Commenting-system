@@ -93,6 +93,12 @@ export class Select {
 		})
 
 		this.commentItemsWrapper.classList.remove(this.commentItemsStyle.load)
+
+		if (this.favorite._isFavorite) {
+			const lastCommentItem =
+				this.commentItemsWrapper.querySelector('.last_comment')
+			lastCommentItem?.classList.remove('last_comment')
+		}
 	}
 
 	public changeStylesFavorite() {

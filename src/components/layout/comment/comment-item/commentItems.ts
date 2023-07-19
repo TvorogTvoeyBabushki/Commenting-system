@@ -16,6 +16,10 @@ export class CommentItems {
 	private _commentsInfo: ICommentInfo[] = []
 
 	constructor() {
+		this.checkingLocalStorageKey()
+	}
+
+	public checkingLocalStorageKey() {
 		if (localStorage.getItem('comments')) {
 			this._commentsInfo = [
 				...JSON.parse(localStorage.getItem('comments') as string)

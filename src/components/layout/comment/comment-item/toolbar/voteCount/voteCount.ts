@@ -22,7 +22,7 @@ export class VoteCount {
 		this._voteCount = this._commentInfo.voteCount as number
 	}
 
-	public checkingLocalStorageKey(type: string) {
+	private checkingLocalStorageKey(type: string) {
 		if (localStorage.getItem(type)) {
 			const parseLocalStorage = [
 				...JSON.parse(localStorage.getItem(type) as string)
@@ -140,16 +140,24 @@ export class VoteCount {
 	}
 
 	private conditionsForUpdateVoteCount = (commentInfo: ICommentInfo) => {
-		commentInfo.isDecrement = true
-		commentInfo.isIncrement = true
+		if (
+			(this._voteCount > -99 && this._voteCount < 0) ||
+			(this._voteCount < 99 && this._voteCount > 0)
+		) {
+			commentInfo.isDecrement = true
+			commentInfo.isIncrement = true
 
-		const commentsInfoOfRepliesToComment = commentInfo.replies as ICommentInfo[]
+			const commentsInfoOfRepliesToComment =
+				commentInfo.replies as ICommentInfo[]
 
-		if (commentsInfoOfRepliesToComment) {
-			commentsInfoOfRepliesToComment.forEach(commentInfoOfRepliesToComment => {
-				commentInfoOfRepliesToComment.isDecrement = true
-				commentInfoOfRepliesToComment.isIncrement = true
-			})
+			if (commentsInfoOfRepliesToComment) {
+				commentsInfoOfRepliesToComment.forEach(
+					commentInfoOfRepliesToComment => {
+						commentInfoOfRepliesToComment.isDecrement = true
+						commentInfoOfRepliesToComment.isIncrement = true
+					}
+				)
+			}
 		}
 	}
 
