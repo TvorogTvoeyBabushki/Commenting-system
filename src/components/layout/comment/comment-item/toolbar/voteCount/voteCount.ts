@@ -141,8 +141,8 @@ export class VoteCount {
 
 	private conditionsForUpdateVoteCount = (commentInfo: ICommentInfo) => {
 		if (
-			(this._voteCount > -99 && this._voteCount < 0) ||
-			(this._voteCount < 99 && this._voteCount > 0)
+			(this._voteCount > -99 && this._voteCount <= 0) ||
+			(this._voteCount < 99 && this._voteCount >= 0)
 		) {
 			commentInfo.isDecrement = true
 			commentInfo.isIncrement = true
