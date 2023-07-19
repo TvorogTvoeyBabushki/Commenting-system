@@ -6,8 +6,13 @@ export default defineConfig({
 	plugins: [tsconfigPaths()],
 	resolve: {
 		alias: {
-			'@': resolve(__dirname, 'src')
+			'@': resolve(__dirname, './src')
 		}
+	},
+	server: {
+		port: 3000,
+		open: true,
+		cors: true
 	},
 	base: './'
 })
